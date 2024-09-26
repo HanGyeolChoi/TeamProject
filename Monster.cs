@@ -9,7 +9,7 @@ namespace TextRPG_project
         class Monster
         {
             public int level;
-            private string name;
+            public string name;
             public int health;
             public int attack;
 

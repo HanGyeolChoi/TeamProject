@@ -6,7 +6,7 @@ namespace TextRPG_project
 {
     internal partial class Program
     {
-        class Item
+        public class Item
         {
             private string name;
             public int itemType;    // 타입 1 = 방어구, 타입 2 = 무기

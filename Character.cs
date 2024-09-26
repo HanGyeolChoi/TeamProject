@@ -6,10 +6,10 @@ namespace TextRPG_project
 {
     internal partial class Program
     {
-        class Character
+        public class Character
         {
             public int level;
-            private string name;
+            public string name;
             private int class_type;     //전사일 경우 1, 도적일 경우 2
             public int attack;
             public int defence;
@@ -182,6 +182,14 @@ namespace TextRPG_project
                     equippedWeapon = null;
                 }
                 item.equip = false;
+            }
+
+            public void PrintSimpleStats()
+            {
+                Console.WriteLine("[내정보]");
+                Console.WriteLine($"Lv.{level}\t직업: ");
+                Console.WriteLine($"HP {health}/100");
+                Console.WriteLine();
             }
 
 

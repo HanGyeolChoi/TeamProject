@@ -77,7 +77,7 @@ namespace TextRPG_project
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
             Console.WriteLine("4. 휴식하기");
-            Console.WriteLine("5. 던전 입장");
+            Console.WriteLine("5. 전투 시작");
             Console.WriteLine("0. 종료");
 
             int input = CheckInput(0, 5);
@@ -97,7 +97,8 @@ namespace TextRPG_project
                     Rest(player);
                     break;
                 case 5:
-                    DungeonMenu(player);
+                    Dungeon dungeon = new Dungeon();
+                    Fight(player,dungeon);
                     break;
                 case 0:
                     break;
@@ -180,7 +181,7 @@ namespace TextRPG_project
             {
                 SellMenu(items, player);
             }
-            else 
+            else
             {
                 MainMenu(player);
             }
@@ -280,125 +281,36 @@ namespace TextRPG_project
                 SellMenu(items, player);
             }
         }
-
-
-        static void DungeonMenu(Character player)
+        static void Fight(Character player, Dungeon dungeon)
         {
             Console.Clear();
-            int diff1 = 5;
-            int diff2 = 11;
-            int diff3 = 17;
-            Console.WriteLine("던전 입장");
-            Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
-            Console.WriteLine($"현재 체력\t: {player.health}");
-            Console.WriteLine($"현재 방어력\t: {player.defence}\n");
+            Console.WriteLine("Battle!");
+            Console.WriteLine();
+            dungeon.PrintMonsters();
+            player.PrintSimpleStats();
+            Console.WriteLine();
+            Console.WriteLine("1. 공격");
+            Console.WriteLine();
+            int input = CheckInput(1, 1);
 
-            Console.WriteLine($"1. 쉬운 던전\t\t| 방어력 {diff1} 이상 권장");
-            Console.WriteLine($"2. 일반 던전\t\t| 방어력 {diff2} 이상 권장");
-            Console.WriteLine($"3. 어려운 던전\t\t| 방어력 {diff3} 이상 권장");
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckInput(0, 3);
-            switch (input)
+            if (input == 1)            // 몬스터 공격 선택
             {
-                case 1:
-                    EnterDungeon(player, diff1);
-                    break;
-                case 2:
-                    EnterDungeon(player, diff2);
-                    break;
-                case 3:
-                    EnterDungeon(player, diff3);
-                    break;
-                case 0:
-                    MainMenu(player);
-                    break;
-                default:
-                    Console.WriteLine("Error 발생");
-                    break;
+                Console.WriteLine("공격 창 출력");
+                Thread.Sleep(2000);                     // 임시 공격 창 출력
+                //Attack(player, dungeon);
+                dungeon.EnemyAttack(player);
 
             }
+            //else if (input == 2)      // 스킬이 추가되면 쓸 곳
+            //{
+            //      Skill(player, dungeon);
+            //}
 
-
-        }
-
-        static void EnterDungeon(Character player, int diff)
-        {
-            int[] dungeonGold = { 1000, 1700, 2500 };
-            Random rand = new Random();
-            int decreasedHealth;
-            int result;
-            if (player.defence >= diff)
-            {
-                decreasedHealth = rand.Next(20 - player.defence + diff, 35 - player.defence + diff + 1);    // 깎이는 체력 수치
-                result = rand.Next(100 + player.attack, 100 + player.attack * 2 + 1);   // 보상 배율 랜덤 설정
-            }
-            else
-            {
-                int win = rand.Next(0, 10);
-                if (win < 4)
-                {
-                    result = 0;
-                    if (player.health > 60) decreasedHealth = player.health / 2;
-                    else decreasedHealth = 30;
-                }
-                else
-                {
-                    decreasedHealth = rand.Next(20 - player.defence + diff, 35 - player.defence + diff + 1);    // 깎이는 체력 수치
-                    result = rand.Next(100 + player.attack, 100 + player.attack * 2 + 1);   // 보상 배율 랜덤 설정
-                }
-            }
-
-            Console.Clear();
-            if (player.health <= decreasedHealth)
-            {
-                GameOver();
-            }
-            else
-            {
-                if (result == 0) // 던전 클리어 실패 시
-                {
-                    Console.Clear();
-                    Console.WriteLine("던전 클리어 실패");
-                    Console.WriteLine($"체력이 {decreasedHealth}만큼 줄어듭니다.");
-
-                    Console.WriteLine("\n[탐험 결과]");
-                    Console.WriteLine($"체력 {player.health} -> {player.health - decreasedHealth}");
-
-                    player.health -= decreasedHealth;
-                }
-                else            // 던전 클리어 시
-                {
-                    Console.WriteLine("던전 클리어");
-                    Console.WriteLine("축하합니다");
-                    Console.WriteLine($"{(DungeonDiff)diff} 던전을 클리어 하였습니다.");
-
-                    Console.WriteLine("\n[탐험 결과]");
-                    Console.WriteLine($"체력 {player.health} -> {player.health - decreasedHealth}");
-                    Console.WriteLine($"Gold {player.gold} -> {player.gold + dungeonGold[diff / 5 - 1] * result / 100}");
-
-                    player.health -= decreasedHealth;
-                    player.gold += dungeonGold[diff / 5 - 1] * result / 100;
-                    player.numberDungeonClear++;
-
-                    if (player.numberDungeonClear >= player.level)
-                    {
-                        player.level++;
-                        player.numberDungeonClear = 0;
-                        player.attack += player.level % 2; // 2레벨마다 1씩 오르게 설정
-                        player.defence += 1;
-
-                        Console.WriteLine("레벨업!");
-                        if (player.level % 2 == 1) Console.WriteLine("공격력이 1 증가했습니다.");
-                        Console.WriteLine("방어력이 1 증가했습니다.\n");
-                    }
-                }
-
-                Console.Write("\n돌아가려면 아무 키나 입력해주세요.\n>> ");
-                string input = Console.ReadLine();
-
-                DungeonMenu(player);
-            }
+            //else
+            //{
+            //    Console.WriteLine("잘못된 입력입니다.- Fight() 함수 내");
+            //    Thread.Sleep(1000);
+            //}
         }
 
         static void GameOver()
