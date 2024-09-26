@@ -262,7 +262,6 @@ namespace TextRPG_project
                 Console.WriteLine("1. 휴식 하기");
                 Console.WriteLine("0. 나가기");
 
-                Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
                 int input = CheckInput(0, 1);
 
                 if (input == 1)
@@ -576,7 +575,7 @@ namespace TextRPG_project
                 {
                     Console.Clear();
                     Console.WriteLine("던전 클리어 실패");
-                    Console.WriteLine("체력이 절반으로 줄어듭니다.");
+                    Console.WriteLine($"체력이 {decreasedHealth}만큼 줄어듭니다.");
 
                     Console.WriteLine("\n[탐험 결과]");
                     Console.WriteLine($"체력 {player.health} -> {player.health - decreasedHealth}");
