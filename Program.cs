@@ -376,28 +376,21 @@ namespace TextRPG_project
 
             Console.WriteLine("\n1. 아이템 구매");
             Console.WriteLine("2. 아이템 판매");
-            Console.WriteLine("0. 나가기\n");
+            Console.WriteLine("0. 나가기");
 
-            Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
-            string input = Console.ReadLine();
+            int input = CheckInput(0, 2);
 
-            if (input == "1")
+            if (input == 1)
             {
                 BuyMenu(items, player);
             }
-            else if (input == "2")
+            else if (input == 2)
             {
                 SellMenu(items, player);
             }
-            else if (input == "0")
+            else 
             {
                 MainMenu(player);
-            }
-            else
-            {
-                Console.WriteLine("잘못된 입력입니다.");
-                Thread.Sleep(1000);
-                Store(items, player);
             }
         }
 
