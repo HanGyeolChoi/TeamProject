@@ -10,6 +10,7 @@ namespace TextRPG_project
     internal partial class Program
     {
         static List<Item> itemList = new List<Item>(); // 아이템 리스트 초기화;
+        static List<Monster> monsterList = new List<Monster>(); // 아이템 리스트 초기화;
         public enum DungeonDiff { 쉬운 = 5, 일반 = 11, 어려운 = 17 }
         static string Start()
         {
@@ -473,6 +474,10 @@ namespace TextRPG_project
             itemList.Add(new Item("낡은 검\t\t", 2, 2, 600));
             itemList.Add(new Item("청동 도끼\t\t", 2, 5, 1500));
             itemList.Add(new Item("스파르타의 창 \t", 2, 7, 2300));
+
+            monsterList.Add(new Monster("미니언", 2, 15, 5));
+            monsterList.Add(new Monster("공허충", 3, 10, 9));
+            monsterList.Add(new Monster("대포미니언", 5, 25, 8));
             MainMenu(player); // 게임 시작
         }
     }
