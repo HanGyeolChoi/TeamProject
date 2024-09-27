@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 //using System.Xml;
 //using System.Xml.Linq;
 //using System.Xml.Serialization;
@@ -136,9 +137,7 @@ namespace TextRPG_project
             // 풀피인데 회복하려고 시도하는 경우
             if ((input == 1 || input == 2) && player.health >= 100)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("체력이 충분합니다. 회복할 필요가 없습니다.");
-                Console.ResetColor();
+                WriteColoredConsole("체력이 충분합니다. 회복할 필요가 없습니다.", ConsoleColor.Red);
                 Thread.Sleep(1000);
                 Rest(player);
             }
@@ -153,18 +152,14 @@ namespace TextRPG_project
                     {
                         player.gold -= 500;
                         player.health += 40;
-                        Console.ForegroundColor = ConsoleColor.Blue;
                         if (player.health >= 100) player.health = 100;
-                        Console.WriteLine("휴식을 완료했습니다.");
-                        Console.ResetColor();
+                        WriteColoredConsole("휴식을 완료했습니다.", ConsoleColor.Blue);
                         Thread.Sleep(1000);
                         Rest(player);
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Gold 가 부족합니다.");
-                        Console.ResetColor();
+                        WriteColoredConsole("Gold 가 부족합니다.", ConsoleColor.Red);
                         Thread.Sleep(1000);
                         Rest(player);
                     }
@@ -178,9 +173,7 @@ namespace TextRPG_project
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("포션이 부족합니다.");
-                        Console.ResetColor();
+                        WriteColoredConsole("포션이 부족합니다.", ConsoleColor.Red);
                         Thread.Sleep(1000);
                         Rest(player);
                     }
@@ -203,9 +196,7 @@ namespace TextRPG_project
             if (player.health >= 100)
                 player.health = 100;
             potionList.Remove(potionHp);
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("회복을 완료했습니다.");
-            Console.ResetColor();
+            WriteColoredConsole("회복을 완료했습니다.", ConsoleColor.Blue);
         }
 
         static void Store(List<Item> items, Character player)
@@ -245,7 +236,6 @@ namespace TextRPG_project
                 MainMenu(player);
             }
         }
-
 
         static void BuyMenu(List<Item> items, Character player)
         {
@@ -469,7 +459,7 @@ namespace TextRPG_project
 
             if (player.questCleared[questNum] == true)      // 퀘스트를 이미 클리어 한 상태
             {
-                Console.WriteLine("\n이미 이 퀘스트를 클리어 하였습니다.");
+                WriteColoredConsole("\n이미 이 퀘스트를 클리어 하였습니다.", ConsoleColor.Red);
                 Thread.Sleep(1000);
             }
             else
@@ -573,6 +563,28 @@ namespace TextRPG_project
             }
             Console.SetCursorPosition(0, currentLineCursor - numberOfLines);
         }
+        
+        static int GetStringLenghth(string input)
+        {
+            int len = 0;
+            foreach (char c in input)
+            {
+                // 한글일 경우 너비를 2로, 영어일 경우 1로 계산
+                // if (c >= 'ㄱ' && c <= 'ㅎ' || c >= '가' && c <= '힣')
+                if (c >= 0x1100 && c <= 0x11FF || c >= 0xAC00 && c <= 0xD7A3)
+                    len += 2;
+                else
+                    len += 1;
+            }
+            return len;
+        }
+
+        static void WriteColoredConsole(string input, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(input);
+            Console.ResetColor();
+        }
 
         //static void SaveCharacter(Character character, string filePath)
         //{
@@ -591,7 +603,7 @@ namespace TextRPG_project
         //        return (Character)serializer.Deserialize(stream);
         //    }
         //}
-
+        
 
         static void Main(string[] args)
         {
@@ -604,12 +616,12 @@ namespace TextRPG_project
             Character player = new Character(name, class_type); // player class 초기화
 
             // 아이템 데이터 추가
-            itemList.Add(new Item("수련자 갑옷\t\t", 1, 5, 1000));
-            itemList.Add(new Item("무쇠 갑옷\t\t", 1, 9, 2000));
-            itemList.Add(new Item("스파르타의 갑옷 \t", 1, 15, 3500));
-            itemList.Add(new Item("낡은 검\t\t", 2, 2, 600));
-            itemList.Add(new Item("청동 도끼\t\t", 2, 5, 1500));
-            itemList.Add(new Item("스파르타의 창 \t", 2, 7, 2300));
+            itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));
+            itemList.Add(new Item("무쇠 갑옷", 1, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.", 2000));
+            itemList.Add(new Item("스파르타의 갑옷", 1, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500));
+            itemList.Add(new Item("낡은 검", 2, 2, "쉽게 볼 수 있는 낡은 검 입니다.", 600));
+            itemList.Add(new Item("청동 도끼", 2, 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500));
+            itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
 
             // 몬스터 데이터 추가
             monsterList.Add(new Monster("미니언", 2, 15, 5));
