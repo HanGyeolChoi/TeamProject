@@ -43,6 +43,7 @@ namespace TextRPG_project
                         Console.Clear();
                         Console.WriteLine("Battle!!\n");
                         Console.WriteLine($"Lv. {monsters[i].level} {monsters[i].name}의 공격!");
+                        Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monsters[i].attack}]");
                         Console.WriteLine();
                         Console.WriteLine($"Lv. {player.level} {player.name}");
                         Console.WriteLine($"HP {player.health} -> {player.health - monsters[i].attack}");

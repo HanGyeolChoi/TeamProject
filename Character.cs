@@ -186,13 +186,21 @@ namespace TextRPG_project
 
             public void PrintSimpleStats()
             {
+                string? job = null;
+                switch (class_type)
+                {
+                    case 1:
+                        job = "전사";
+                        break;
+                    case 2:
+                        job = "도적";
+                        break;
+                }
                 Console.WriteLine("[내정보]");
-                Console.WriteLine($"Lv.{level}\t직업: ");
+                Console.WriteLine($"Lv.{level}\t직업: {job}");
                 Console.WriteLine($"HP {health}/100");
                 Console.WriteLine();
             }
-
-
         }
     }
 }

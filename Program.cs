@@ -9,8 +9,11 @@ namespace TextRPG_project
 {
     internal partial class Program
     {
-        static List<Item> itemList = new List<Item>(); // 아이템 리스트 초기화;
-        static List<Monster> monsterList = new List<Monster>(); // 아이템 리스트 초기화;
+        static List<Item> itemList = new List<Item>(6); // 아이템 리스트 초기화;
+        static List<Monster> monsterList = new List<Monster>(3); // 몬스터 리스트 초기화;
+
+        static int potionHp = 30;
+        static List<int> potionList = new List<int>(3); // 포션 리스트 초기화;
         public enum DungeonDiff { 쉬운 = 5, 일반 = 11, 어려운 = 17 }
         static string Start()
         {
@@ -76,7 +79,7 @@ namespace TextRPG_project
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
-            Console.WriteLine("4. 휴식하기");
+            Console.WriteLine("4. 체력 회복하기");
             Console.WriteLine("5. 전투 시작");
             Console.WriteLine("0. 종료");
 
@@ -94,11 +97,11 @@ namespace TextRPG_project
                     Store(itemList, player);//상점 보기
                     break;
                 case 4:
-                    Rest(player);
+                    Rest(player);   // 휴식하기
                     break;
                 case 5:
-                    Dungeon dungeon = new Dungeon();
-                    Fight(player,dungeon);
+                    Dungeon dungeon = new Dungeon();    // 전투 시작
+                    Fight(player, dungeon);
                     break;
                 case 0:
                     break;
@@ -115,39 +118,91 @@ namespace TextRPG_project
         static void Rest(Character player)
         {
             Console.Clear();
-            Console.WriteLine("휴식하기");
-            Console.WriteLine($"500 G 를 내면 체력을 회복할 수 있습니다. 보유 골드: {player.gold} G");
+            Console.WriteLine("체력 회복하기");
+            Console.WriteLine($"500 G 를 내어 휴식하면 체력을 회복할 수 있습니다. 보유 골드: {player.gold} G");
+            Console.WriteLine($"포션을 사용하면 체력을 {potionHp} 회복할 수 있습니다. (남은 포션 : {potionList.Count} )");
             Console.WriteLine($"현재 체력: {player.health} / 100\n");
 
             Console.WriteLine("1. 휴식 하기");
+            Console.WriteLine("2. 포션 사용하기");
             Console.WriteLine("0. 나가기");
 
-            int input = CheckInput(0, 1);
+            int input = CheckInput(0, 2);
 
-            if (input == 1)
+            // 풀피인데 회복하려고 시도하는 경우
+            if ((input == 1 || input == 2) && player.health >= 100)
             {
-                if (player.gold >= 500)
-                {
-                    player.gold -= 500;
-                    player.health += 40;
-                    if (player.health >= 100) player.health = 100;
-                    Console.WriteLine("휴식을 완료했습니다.");
-                    Thread.Sleep(1000);
-                    MainMenu(player);
-                }
-                else
-                {
-                    Console.WriteLine("Gold 가 부족합니다.");
-                    Thread.Sleep(1000);
-                    MainMenu(player);
-                }
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("체력이 충분합니다. 회복할 필요가 없습니다.");
+                Console.ResetColor();
+                Thread.Sleep(1000);
+                Rest(player);
             }
-            else
+
+            switch (input)
             {
-                MainMenu(player);
+                case 0: // 나가기
+                    MainMenu(player);
+                    break;
+                case 1: // 휴식하기
+                    if (player.gold >= 500)
+                    {
+                        player.gold -= 500;
+                        player.health += 40;
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        if (player.health >= 100) player.health = 100;
+                        Console.WriteLine("휴식을 완료했습니다.");
+                        Console.ResetColor();
+                        Thread.Sleep(1000);
+                        Rest(player);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Gold 가 부족합니다.");
+                        Console.ResetColor();
+                        Thread.Sleep(1000);
+                        Rest(player);
+                    }
+                    break;
+                case 2: // 포션 사용하기
+                    if (potionList.Count > 0)
+                    {
+                        UsePotion(player);
+                        Thread.Sleep(1000);
+                        Rest(player);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("포션이 부족합니다.");
+                        Console.ResetColor();
+                        Thread.Sleep(1000);
+                        Rest(player);
+                    }
+                    break;
             }
         }
-
+        static void GetPotion()
+        {
+            // 10%의 확률로 포션을 얻음
+            Random rand = new Random();
+            int randNum = rand.Next(0, 100);
+            if (randNum < 10)
+            {
+                potionList.Add(potionHp);
+            }
+        }
+        static void UsePotion(Character player)
+        {
+            player.health += potionHp;
+            if (player.health >= 100)
+                player.health = 100;
+            potionList.Remove(potionHp);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("회복을 완료했습니다.");
+            Console.ResetColor();
+        }
 
         static void Store(List<Item> items, Character player)
         {
@@ -380,6 +435,8 @@ namespace TextRPG_project
             class_type = SelectClass();
 
             Character player = new Character(name, class_type); // player class 초기화
+
+            // 아이템 데이터 추가
             itemList.Add(new Item("수련자 갑옷\t\t", 1, 5, 1000));
             itemList.Add(new Item("무쇠 갑옷\t\t", 1, 9, 2000));
             itemList.Add(new Item("스파르타의 갑옷 \t", 1, 15, 3500));
@@ -387,9 +444,15 @@ namespace TextRPG_project
             itemList.Add(new Item("청동 도끼\t\t", 2, 5, 1500));
             itemList.Add(new Item("스파르타의 창 \t", 2, 7, 2300));
 
+            // 몬스터 데이터 추가
             monsterList.Add(new Monster("미니언", 2, 15, 5));
             monsterList.Add(new Monster("공허충", 3, 10, 9));
             monsterList.Add(new Monster("대포미니언", 5, 25, 8));
+
+            // 기본 포션 초기화
+            for (int i = 0; i < 3; i++)
+                potionList.Add(potionHp);
+
             MainMenu(player); // 게임 시작
         }
     }
