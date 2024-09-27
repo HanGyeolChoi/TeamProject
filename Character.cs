@@ -21,6 +21,9 @@ namespace TextRPG_project
             public List<Item> items;   // 인벤토리의 아이템
             private Item? equippedArmor;
             private Item? equippedWeapon;
+            public bool[] acceptQuest;  //퀘스트 수락 여부
+            public int[] questNumber;   //각 퀘스트 진행상황
+            public bool[] questCleared; //퀘스트 클리어 여부
             public Character(string _name, int class_num)
             {
                 level = 1;
@@ -31,11 +34,14 @@ namespace TextRPG_project
                 health = 100;
                 gold = 1500;
                 items = new List<Item>();
-                numberDungeonClear = 0;
-                itemAttack = 0;
-                itemDefence = 0;
+                //numberDungeonClear = 0;
+                //itemAttack = 0;
+                //itemDefence = 0;      //자동으로 0으로 초기화됨
                 equippedArmor = null;
                 equippedWeapon = null;
+                acceptQuest = new bool[3];
+                questNumber = new int[3];
+                questCleared = new bool[3];
             }
 
 
@@ -165,6 +171,7 @@ namespace TextRPG_project
                     equippedWeapon = item;
                 }
                 item.equip = true;
+                questNumber[1] = 1;
             }
 
             private void Unequip(Item item)
@@ -182,6 +189,7 @@ namespace TextRPG_project
                     equippedWeapon = null;
                 }
                 item.equip = false;
+                if (equippedArmor == null && equippedWeapon == null) questNumber[1] = 0;
             }
 
             public void PrintSimpleStats()
@@ -197,7 +205,7 @@ namespace TextRPG_project
                         break;
                 }
                 Console.WriteLine("[내정보]");
-                Console.WriteLine($"Lv.{level}\t직업: {job}");
+                Console.WriteLine($"Lv.{level}\t{name}\t직업: {job}");
                 Console.WriteLine($"HP {health}/100");
                 Console.WriteLine();
             }
