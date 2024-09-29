@@ -236,7 +236,6 @@ namespace TextRPG_project
                 MainMenu(player);
             }
         }
-
         static void BuyMenu(List<Item> items, Character player)
         {
             Console.Clear();
@@ -287,8 +286,6 @@ namespace TextRPG_project
                 BuyMenu(items, player);
             }
         }
-
-
         static void SellMenu(List<Item> items, Character player)
         {
             Console.Clear();
@@ -330,6 +327,7 @@ namespace TextRPG_project
                 SellMenu(items, player);
             }
         }
+
         static void Fight(Character player, Dungeon dungeon)
         {
             Console.Clear();
@@ -393,7 +391,6 @@ namespace TextRPG_project
                     break;
             }            
         }
-
         static void QuestFirst(Character player)
         {
             Console.Clear();
@@ -412,7 +409,6 @@ namespace TextRPG_project
             Console.WriteLine("100G\n");
             CheckQuest(player, 0);
         }
-
         static void QuestSecond(Character player)
         {
             Console.Clear();
@@ -431,7 +427,6 @@ namespace TextRPG_project
             Console.WriteLine("100G\n");
             CheckQuest(player, 1);
         }
-
         static void QuestThird(Character player)
         {
             Console.Clear();
@@ -525,6 +520,7 @@ namespace TextRPG_project
             }
             QuestMenu(player);
         }
+
         static void GameOver()
         {
             Console.Clear();
@@ -532,78 +528,6 @@ namespace TextRPG_project
             Console.WriteLine("체력이 0 이하로 떨어졌습니다.");
 
         }
-
-        static int CheckInput(int min, int max)
-        {
-            Console.WriteLine("\n원하시는 행동을 선택해주세요.");
-            Console.Write(">>");
-            int result;
-            string input = Console.ReadLine();
-            bool isNumber = int.TryParse(input, out result);
-            if (isNumber)
-            {
-                if (result >= min && result <= max)
-                {
-                    return result;
-                }
-            }
-            Console.WriteLine("잘못된 입력입니다.");
-            Thread.Sleep(1000);
-            ClearPreviousLines(4);
-            return CheckInput(min, max);
-        }
-
-        static void ClearPreviousLines(int numberOfLines)
-        {
-            int currentLineCursor = Console.CursorTop;
-            for (int i = 0; i < numberOfLines; i++)
-            {
-                Console.SetCursorPosition(0, currentLineCursor - 1 - i);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-            Console.SetCursorPosition(0, currentLineCursor - numberOfLines);
-        }
-        
-        static int GetStringLenghth(string input)
-        {
-            int len = 0;
-            foreach (char c in input)
-            {
-                // 한글일 경우 너비를 2로, 영어일 경우 1로 계산
-                // if (c >= 'ㄱ' && c <= 'ㅎ' || c >= '가' && c <= '힣')
-                if (c >= 0x1100 && c <= 0x11FF || c >= 0xAC00 && c <= 0xD7A3)
-                    len += 2;
-                else
-                    len += 1;
-            }
-            return len;
-        }
-
-        static void WriteColoredConsole(string input, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(input);
-            Console.ResetColor();
-        }
-
-        //static void SaveCharacter(Character character, string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        serializer.Serialize(stream, character);
-        //    }
-        //}
-
-        //static Character LoadCharacter(string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Open))
-        //    {
-        //        return (Character)serializer.Deserialize(stream);
-        //    }
-        //}
-        
 
         static void Main(string[] args)
         {
