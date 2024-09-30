@@ -104,6 +104,7 @@ namespace TextRPG_project
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
                     Fight(player, dungeon);
+                    dungeon.DeadCount = 0;
                     break;
                 case 6:
                     QuestMenu(player);
@@ -332,23 +333,38 @@ namespace TextRPG_project
         }
         static void Fight(Character player, Dungeon dungeon)
         {
-            Console.Clear();
-            Console.WriteLine("Battle!");
-            Console.WriteLine();
-            dungeon.PrintMonsters();
-            player.PrintSimpleStats();
-            Console.WriteLine();
-            Console.WriteLine("1. 공격");
-            Console.WriteLine();
-            int input = CheckInput(1, 1);
-
-            if (input == 1)            // 몬스터 공격 선택
+            if (dungeon.Clear == true)
             {
-                Console.WriteLine("공격 창 출력");
-                Thread.Sleep(2000);                     // 임시 공격 창 출력
-                //Attack(player, dungeon);
-                dungeon.EnemyAttack(player);
+                Console.Clear();
+                GameClear(player, dungeon);
+            }
 
+            if (player.health <= 0)
+            {
+                Console.Clear();
+                GameOver(player);
+            }
+
+            else
+            {
+                Console.Clear();
+                player.lasthp = player.health;
+                Console.WriteLine("Battle!");
+                Console.WriteLine();
+                dungeon.PrintMonsters();
+                player.PrintSimpleStats();
+                Console.WriteLine();
+                Console.WriteLine("1. 공격");
+                Console.WriteLine();
+                int input = CheckInput(1, 1);
+
+                if (input == 1)            // 몬스터 공격 선택
+                {
+                    Console.WriteLine("공격 창 출력");
+                    Thread.Sleep(2000);                     // 임시 공격 창 출력
+                                                            //Attack(player, dungeon);
+                    dungeon.EnemyAttack(player);
+                }
             }
             //else if (input == 2)      // 스킬이 추가되면 쓸 곳
             //{
@@ -374,7 +390,7 @@ namespace TextRPG_project
             Console.WriteLine();
 
             int input = CheckInput(0, 3);
-            switch(input)
+            switch (input)
             {
                 case 0:
                     MainMenu(player);
@@ -391,22 +407,22 @@ namespace TextRPG_project
                 default:
                     Console.WriteLine("Error in QuestMenu");
                     break;
-            }            
+            }
         }
 
         static void QuestFirst(Character player)
         {
             Console.Clear();
             Console.WriteLine("퀘스트\n");
-            
+
             Console.WriteLine("마을을 위협하는 미니언 처치\n");
-            
+
             Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
             Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
             Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
-            
+
             Console.WriteLine($"- 미니언 5마리 처치 ({player.questNumber[0]} / 5)\n");
-            
+
             Console.WriteLine("- 보상 -");
             //Console.WriteLine("대충 아이템 이름");
             Console.WriteLine("100G\n");
@@ -525,60 +541,95 @@ namespace TextRPG_project
             }
             QuestMenu(player);
         }
-        static void GameOver()
+        static void GameOver(Character player)
         {
             Console.Clear();
-            Console.WriteLine("게임 오버");
-            Console.WriteLine("체력이 0 이하로 떨어졌습니다.");
+            Console.WriteLine("Battle!! - Result");
+            Console.WriteLine("\nYou Lose");
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            Console.WriteLine("\n0. 처음부터 다시 시작하기");
+            Console.WriteLine("\n1. 게임 종료하기");
+            int input = CheckInput(0, 1);
+
+            switch (input)
+            {
+                case 0:
+                    Start();
+                    break;
+                case 1:
+                    break;
+                default:
+                    break;
+            }
+        }
+        static void GameClear(Character player, Dungeon dungeon)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result");
+            Console.WriteLine("\nYou Win");
+            Console.WriteLine($"던전에서 몬스터를 {dungeon.DeadCount} 마리 잡았습니다.");
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            Console.WriteLine("\n0. 돌아가기");
+            int input = CheckInput(0, 0);
+
+            switch (input)
+            {
+                case 0:
+                    MainMenu(player); 
+                    break;
+                default:
+                    break;
+            }
 
         }
-        
-        //static void SaveCharacter(Character character, string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        serializer.Serialize(stream, character);
-        //    }
-        //}
+            //static void SaveCharacter(Character character, string filePath)
+            //{
+            //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
+            //    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            //    {
+            //        serializer.Serialize(stream, character);
+            //    }
+            //}
 
-        //static Character LoadCharacter(string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Open))
-        //    {
-        //        return (Character)serializer.Deserialize(stream);
-        //    }
-        //}
+            //static Character LoadCharacter(string filePath)
+            //{
+            //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
+            //    using (FileStream stream = new FileStream(filePath, FileMode.Open))
+            //    {
+            //        return (Character)serializer.Deserialize(stream);
+            //    }
+            //}
 
-        static void Main(string[] args)
-        {
-            string name;
-            int class_type;
+            static void Main(string[] args)
+            {
+                string name;
+                int class_type;
 
-            name = Start();
-            class_type = SelectClass();
+                name = Start();
+                class_type = SelectClass();
 
-            Character player = new Character(name, class_type); // player class 초기화
+                Character player = new Character(name, class_type); // player class 초기화
 
-            // 아이템 데이터 추가
-            itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));
-            itemList.Add(new Item("무쇠 갑옷", 1, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.", 2000));
-            itemList.Add(new Item("스파르타의 갑옷", 1, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500));
-            itemList.Add(new Item("낡은 검", 2, 2, "쉽게 볼 수 있는 낡은 검 입니다.", 600));
-            itemList.Add(new Item("청동 도끼", 2, 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500));
-            itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
+                // 아이템 데이터 추가
+                itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));
+                itemList.Add(new Item("무쇠 갑옷", 1, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.", 2000));
+                itemList.Add(new Item("스파르타의 갑옷", 1, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500));
+                itemList.Add(new Item("낡은 검", 2, 2, "쉽게 볼 수 있는 낡은 검 입니다.", 600));
+                itemList.Add(new Item("청동 도끼", 2, 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500));
+                itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
 
-            // 몬스터 데이터 추가
-            monsterList.Add(new Monster("미니언", 2, 15, 5));
-            monsterList.Add(new Monster("공허충", 3, 10, 9));
-            monsterList.Add(new Monster("대포미니언", 5, 25, 8));
+                // 몬스터 데이터 추가
+                monsterList.Add(new Monster("미니언", 2, 15, 5, false));
+                monsterList.Add(new Monster("공허충", 3, 10, 9, false));
+                monsterList.Add(new Monster("대포미니언", 5, 25, 8, false));
 
-            // 기본 포션 초기화
-            for (int i = 0; i < 3; i++)
-                potionList.Add(potionHp);
+                // 기본 포션 초기화
+                for (int i = 0; i < 3; i++)
+                    potionList.Add(potionHp);
 
-            MainMenu(player); // 게임 시작
+                MainMenu(player); // 게임 시작
+            }
         }
     }
-}
