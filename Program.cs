@@ -103,7 +103,13 @@ namespace TextRPG_project
                     break;
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
+<<<<<<< Updated upstream
                     Fight(player, dungeon);
+=======
+                    player.lasthp = player.health;
+                    dungeon.EnterDungeon(player);
+                    dungeon.DeadCount = 0;
+>>>>>>> Stashed changes
                     break;
                 case 6:
                     QuestMenu(player);
@@ -111,7 +117,7 @@ namespace TextRPG_project
                 case 0:
                     break;
                 default:
-                    Console.WriteLine("\n잘못된 입력입니다.");
+                    WriteColoredConsole("\n잘못된 입력입니다.", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     MainMenu(player);
                     break;
@@ -119,6 +125,7 @@ namespace TextRPG_project
             }
 
         }
+<<<<<<< Updated upstream
 
         static void Rest(Character player)
         {
@@ -375,10 +382,51 @@ namespace TextRPG_project
 
             int input = CheckInput(0, 3);
             switch(input)
+=======
+        static void GameOver(Character player)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result");
+            WriteColoredConsole("\nYou Lose", ConsoleColor.Red);
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            //Console.WriteLine("\n0. 처음부터 다시 시작하기");
+            Console.WriteLine("\n0. 게임 종료하기");
+            int input = CheckInput(0, 0);
+
+            switch (input)
+            {
+                //case 0:
+                //    Start();
+                //    break;
+                case 0:
+                    break;
+                default:
+                    Console.WriteLine("Error in GameOver");
+                    Thread.Sleep(1000);
+                    break;
+            }
+        }
+
+        static void GameClear(Character player, Dungeon dungeon)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result");
+            WriteColoredConsole("\nYou Win", ConsoleColor.Green);
+            Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            GetPotion();    // 10%의 확률로 포션 획득
+            Console.WriteLine("\n0. 돌아가기");
+            int input = CheckInput(0, 0);
+
+            switch (input)
+>>>>>>> Stashed changes
             {
                 case 0:
                     MainMenu(player);
                     break;
+<<<<<<< Updated upstream
                 case 1:
                     QuestFirst(player);
                     break;
@@ -524,6 +572,11 @@ namespace TextRPG_project
                 }
             }
             QuestMenu(player);
+=======
+                default:
+                    break;
+            }
+>>>>>>> Stashed changes
         }
         static void GameOver()
         {

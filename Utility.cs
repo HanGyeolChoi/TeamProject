@@ -21,7 +21,7 @@ namespace TextRPG_project
                     return result;
                 }
             }
-            Console.WriteLine("잘못된 입력입니다.");
+            WriteColoredConsole("잘못된 입력입니다.", ConsoleColor.Red);
             Thread.Sleep(1000);
             ClearPreviousLines(4);
             return CheckInput(min, max);
