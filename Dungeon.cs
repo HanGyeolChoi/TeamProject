@@ -29,7 +29,6 @@ namespace TextRPG_project
             {
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     if (!monsters[i].IsDead())
                         Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     else

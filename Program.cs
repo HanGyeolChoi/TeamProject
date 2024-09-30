@@ -12,18 +12,25 @@ namespace TextRPG_project
 {
     internal partial class Program
     {
+        static Character player = new Character();
         static List<Item> itemList = new List<Item>(6); // 아이템 리스트 초기화;
         static List<Monster> monsterList = new List<Monster>(3); // 몬스터 리스트 초기화;
-
         static int potionHp = 30;
         static List<int> potionList = new List<int>(3); // 포션 리스트 초기화;
         public enum DungeonDiff { 쉬운 = 5, 일반 = 11, 어려운 = 17 }
+        static bool isDataLoaded = false;
         static string Start()
         {
             Console.Clear();
             Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
-            Console.WriteLine("원하시는 이름을 선택해주세요.\n");
+            if (LoadData(ref player, itemList, potionList))
+            {
+                isDataLoaded = true;
+                return player.name;
+            }
 
+            Console.WriteLine("원하시는 이름을 선택해주세요.\n");
+            
             string name = Console.ReadLine();
 
             Console.WriteLine($"\n설정하신 이름은 {name}입니다.\n");
@@ -85,9 +92,10 @@ namespace TextRPG_project
             Console.WriteLine("4. 체력 회복하기");
             Console.WriteLine("5. 전투 시작");
             Console.WriteLine("6. 퀘스트");
+            Console.WriteLine("7. 데이터 저장");
             Console.WriteLine("0. 종료");
 
-            int input = CheckInput(0, 6);
+            int input = CheckInput(0, 7);
 
             switch (input)
             {
@@ -111,6 +119,11 @@ namespace TextRPG_project
                     break;
                 case 6:
                     QuestMenu(player);
+                    break;
+                case 7:
+                    SaveData(player, itemList, potionList);
+                    Thread.Sleep(1000);
+                    MainMenu(player);
                     break;
                 case 0:
                     break;
@@ -201,26 +214,28 @@ namespace TextRPG_project
             int class_type;
 
             name = Start();
-            class_type = SelectClass();
+            if (!isDataLoaded)
+            {
+                class_type = SelectClass();
 
-            Character player = new Character(name, class_type); // player class 초기화
+                player = new Character(name, class_type); // player class 초기화
 
-            // 아이템 데이터 추가
-            itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));
-            itemList.Add(new Item("무쇠 갑옷", 1, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.", 2000));
-            itemList.Add(new Item("스파르타의 갑옷", 1, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500));
-            itemList.Add(new Item("낡은 검", 2, 2, "쉽게 볼 수 있는 낡은 검 입니다.", 600));
-            itemList.Add(new Item("청동 도끼", 2, 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500));
-            itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
+                // 아이템 데이터 추가
+                itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));
+                itemList.Add(new Item("무쇠 갑옷", 1, 9, "무쇠로 만들어져 튼튼한 갑옷입니다.", 2000));
+                itemList.Add(new Item("스파르타의 갑옷", 1, 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500));
+                itemList.Add(new Item("낡은 검", 2, 2, "쉽게 볼 수 있는 낡은 검 입니다.", 600));
+                itemList.Add(new Item("청동 도끼", 2, 5, "어디선가 사용됐던거 같은 도끼입니다.", 1500));
+                itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
 
+                // 기본 포션 초기화
+                for (int i = 0; i < 3; i++)
+                    potionList.Add(potionHp);
+            }
             // 몬스터 데이터 추가
             monsterList.Add(new Monster("미니언", 2, 15, 5));
             monsterList.Add(new Monster("공허충", 3, 10, 9));
             monsterList.Add(new Monster("대포미니언", 5, 25, 8));
-
-            // 기본 포션 초기화
-            for (int i = 0; i < 3; i++)
-                potionList.Add(potionHp);
 
             MainMenu(player); // 게임 시작
         }

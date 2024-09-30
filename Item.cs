@@ -8,10 +8,10 @@ namespace TextRPG_project
     {
         public class Item
         {
-            private string name;
+            public string name;
             public int itemType;    // 타입 1 = 방어구, 타입 2 = 무기
             public int stat;       // 아이템으로 올라가는 수치
-            private string description;
+            public string description;
             public int price;
             public bool sold;
             public bool equip;
