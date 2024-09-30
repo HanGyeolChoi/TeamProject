@@ -106,7 +106,7 @@ namespace TextRPG_project
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
                     player.lasthp = player.health;
-                    EnterDungeon(player, dungeon);
+                    dungeon.EnterDungeon(player);
                     dungeon.DeadCount = 0;
                     break;
                 case 6:
@@ -115,355 +115,18 @@ namespace TextRPG_project
                 case 0:
                     break;
                 default:
-                    Console.WriteLine("\n잘못된 입력입니다.");
+                    WriteColoredConsole("\n잘못된 입력입니다.", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     MainMenu(player);
                     break;
 
             }
-
         }
-
-        static void Rest(Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("체력 회복하기");
-            Console.WriteLine($"500 G 를 내어 휴식하면 체력을 회복할 수 있습니다. 보유 골드: {player.gold} G");
-            Console.WriteLine($"포션을 사용하면 체력을 {potionHp} 회복할 수 있습니다. (남은 포션 : {potionList.Count} )");
-            Console.WriteLine($"현재 체력: {player.health} / 100\n");
-
-            Console.WriteLine("1. 휴식 하기");
-            Console.WriteLine("2. 포션 사용하기");
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckInput(0, 2);
-
-            // 풀피인데 회복하려고 시도하는 경우
-            if ((input == 1 || input == 2) && player.health >= 100)
-            {
-                WriteColoredConsole("체력이 충분합니다. 회복할 필요가 없습니다.", ConsoleColor.Red);
-                Thread.Sleep(1000);
-                Rest(player);
-            }
-
-            switch (input)
-            {
-                case 0: // 나가기
-                    MainMenu(player);
-                    break;
-                case 1: // 휴식하기
-                    if (player.gold >= 500)
-                    {
-                        player.gold -= 500;
-                        player.health += 40;
-                        if (player.health >= 100) player.health = 100;
-                        WriteColoredConsole("휴식을 완료했습니다.", ConsoleColor.Blue);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    else
-                    {
-                        WriteColoredConsole("Gold 가 부족합니다.", ConsoleColor.Red);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    break;
-                case 2: // 포션 사용하기
-                    if (potionList.Count > 0)
-                    {
-                        UsePotion(player);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    else
-                    {
-                        WriteColoredConsole("포션이 부족합니다.", ConsoleColor.Red);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    break;
-            }
-        }
-        static void GetPotion()
-        {
-            // 10%의 확률로 포션을 얻음
-            Random rand = new Random();
-            int randNum = rand.Next(0, 100);
-            if (randNum < 10)
-            {
-                potionList.Add(potionHp);
-            }
-        }
-        static void UsePotion(Character player)
-        {
-            player.health += potionHp;
-            if (player.health >= 100)
-                player.health = 100;
-            potionList.Remove(potionHp);
-            WriteColoredConsole("회복을 완료했습니다.", ConsoleColor.Blue);
-        }
-
-        static void Store(List<Item> items, Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("상점");
-            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
-
-            Console.WriteLine("[보유 골드]");
-            Console.WriteLine($"{player.gold} G \n");
-
-            Console.WriteLine("[아이템 목록]");
-            foreach (Item item in items)
-            {
-                Console.Write("- ");
-                item.ShowItem();
-                if (!item.sold) Console.WriteLine($" | {item.price} G");
-                else Console.WriteLine(" | 구매 완료");
-            }
-
-            Console.WriteLine("\n1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckInput(0, 2);
-
-            if (input == 1)
-            {
-                BuyMenu(items, player);
-            }
-            else if (input == 2)
-            {
-                SellMenu(items, player);
-            }
-            else
-            {
-                MainMenu(player);
-            }
-        }
-
-        static void BuyMenu(List<Item> items, Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("상점 - 아이템 구매");
-            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n");
-
-            Console.WriteLine("[보유 골드]");
-            Console.WriteLine($"{player.gold} G \n");
-
-            Console.WriteLine("[아이템 목록]");
-            for (int i = 0; i < items.Count; i++)
-            {
-                Console.Write($"- {i + 1} ");
-                items[i].ShowItem();
-                if (!items[i].sold) Console.WriteLine($" | {items[i].price} G");
-                else Console.WriteLine(" | 구매 완료");
-            }
-
-            Console.WriteLine("\n0. 나가기");
-
-            int input = CheckInput(0, items.Count);
-
-            if (input == 0)
-            {
-                Store(items, player);
-            }
-            else
-            {
-                if (items[input - 1].sold)
-                {
-                    Console.WriteLine("이미 구매한 아이템입니다.");
-                    Thread.Sleep(1000);
-                }
-                else
-                {
-                    if (player.gold >= items[input - 1].price)
-                    {
-                        player.Buy(items[input - 1]);
-                        Console.WriteLine("구매를 완료했습니다.");
-                        Thread.Sleep(1000);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Gold가 부족합니다.");
-                        Thread.Sleep(1000);
-                    }
-                }
-                BuyMenu(items, player);
-            }
-        }
-
-
-        static void SellMenu(List<Item> items, Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("상점 - 아이템 판매");
-            Console.WriteLine("필요하지 않은 아이템을 판매할 수 있습니다.\n");
-
-            Console.WriteLine("[보유 골드]");
-            Console.WriteLine($"{player.gold} G \n");
-
-            Console.WriteLine("[아이템 목록]");
-            for (int i = 0; i < player.items.Count; i++)
-            {
-                Console.Write($"- {i + 1} ");
-                player.items[i].ShowItem();
-                Console.WriteLine($" | 판매 가격: {player.items[i].price * 85 / 100} G");
-            }
-
-            Console.WriteLine("0. 나가기");
-
-            int input = CheckInput(0, player.items.Count);
-
-            if (input == 0)
-            {
-                Store(items, player);
-            }
-            else
-            {
-                if (player.items[input - 1].sold)
-                {
-                    player.Sell(player.items[input - 1]);
-                    Console.WriteLine("판매가 완료되었습니다.");
-                    Thread.Sleep(1000);
-                }
-                else
-                {
-                    Console.WriteLine("구매하지 않은 아이템입니다.");
-                    Thread.Sleep(1000);
-                }
-                SellMenu(items, player);
-            }
-        }
-        static void EnterDungeon(Character player, Dungeon dungeon)
-        {
-
-            Console.Clear();
-            Console.WriteLine("Battle!");
-            Console.WriteLine();
-            dungeon.PrintMonsters();
-            player.PrintSimpleStats();
-            Console.WriteLine();
-            Console.WriteLine("1. 공격");
-            Console.WriteLine();
-            int input = CheckInput(1, 1);
-
-            switch (input)
-            {
-                case 1:
-                    AttackPhase(player, dungeon);
-                    break;
-                //case 2:
-                //    Skill(player, dungeon);
-                //    break;
-                default:
-                    Console.WriteLine("잘못된 입력입니다.- EnterDungeon() 함수 내");
-                    Thread.Sleep(1000);
-                    break;
-            }
-
-        }
-
-        static void AttackPhase(Character player, Dungeon dungeon)
-        {
-            Console.Clear();
-            Console.WriteLine("Battle!");
-            Console.WriteLine();
-            dungeon.PrintMonstersWithNumber();
-            player.PrintSimpleStats();
-            Console.WriteLine();
-            Console.WriteLine("0. 취소");
-            Console.WriteLine();
-            int input;
-            int attackDamage;
-            Random rand = new Random();
-            Monster monster;
-            while (true)
-            {
-                Console.WriteLine("대상을 선택해주세요.");
-                Console.Write(">> ");
-                string temp = Console.ReadLine();
-                if (int.TryParse(temp, out input))
-                {
-                    if (input >= 1 && input <= dungeon.monsters.Count)
-                    {
-                        if (dungeon.monsters[input - 1].IsDead())
-                        {
-                            Console.WriteLine("잘못된 입력입니다.");
-                        }
-                        else
-                        {
-                            monster = dungeon.monsters[input - 1];
-                            int errorRange = (player.attack + 9) / 10; // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
-                            attackDamage = rand.Next(player.attack - errorRange, player.attack + errorRange + 1);
-                            break;
-                        }
-                    }
-                    else if (input == 0) EnterDungeon(player, dungeon);    // 0 입력 시 이전으로 돌아감
-                    else Console.WriteLine("잘못된 입력입니다.");
-                }
-                else
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                }
-                Thread.Sleep(1000);
-                ClearPreviousLines(3);
-
-            }
-
-            AttackResult(player, dungeon, attackDamage, monster);
-
-        }
-
-        static void AttackResult(Character player, Dungeon dungeon, int attackDamage, Monster monster)
-        {
-            Console.Clear();
-            Random rand = new Random();
-            bool isCrit = false;
-            int critical = rand.Next(1, 21);
-            if (critical < 4) isCrit = true;             // 치명타 확률계산
-            bool isEvade = false;
-            int evasion = rand.Next(1, 11);
-            if (evasion == 1) isEvade = true;
-
-            Console.WriteLine("Battle!");
-            Console.WriteLine();
-            Console.WriteLine($"{player.name}의 공격!");
-            if (isEvade)
-            {
-                Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
-                attackDamage = 0;
-            }
-            else
-            {
-                if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
-                Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
-                if (isCrit) Console.Write(" - 치명타 공격!!");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine($"Lv.{monster.level} {monster.name}");
-                Console.Write($"HP {monster.health} -> ");
-                if (monster.health - attackDamage <= 0) Console.WriteLine("Dead");
-                else Console.WriteLine($"{monster.health - attackDamage}");
-            }
-            monster.health -= attackDamage;          // 공격 데미지 처리
-            Console.WriteLine();
-            Console.WriteLine("0. 다음");
-            int input = CheckInput(0, 0);
-
-            bool isAllDead = true;
-            foreach (Monster mons in dungeon.monsters)
-            {
-                if (!mons.IsDead()) isAllDead = false;
-            }
-            if (isAllDead) GameClear(player, dungeon);
-            else dungeon.EnemyPhase(player);
-        }
-
         static void GameOver(Character player)
         {
             Console.Clear();
             Console.WriteLine("Battle!! - Result");
-            Console.WriteLine("\nYou Lose");
+            WriteColoredConsole("\nYou Lose", ConsoleColor.Red);
             Console.WriteLine($"\nLV{player.level} {player.name}");
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
             //Console.WriteLine("\n0. 처음부터 다시 시작하기");
@@ -488,10 +151,11 @@ namespace TextRPG_project
         {
             Console.Clear();
             Console.WriteLine("Battle!! - Result");
-            Console.WriteLine("\nYou Win");
+            WriteColoredConsole("\nYou Win", ConsoleColor.Green);
             Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
             Console.WriteLine($"\nLV{player.level} {player.name}");
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            GetPotion();    // 10%의 확률로 포션 획득
             Console.WriteLine("\n0. 돌아가기");
             int input = CheckInput(0, 0);
 
@@ -503,174 +167,16 @@ namespace TextRPG_project
                 default:
                     break;
             }
-
         }
 
-
-        static void QuestMenu(Character player)
+        static void GameOver()
         {
             Console.Clear();
-            Console.WriteLine("퀘스트");
-            Console.WriteLine();
-            Console.WriteLine("1. 마을을 위협하는 미니언 처치");
-            Console.WriteLine("2. 장비 착용하기");
-            Console.WriteLine("3. 더욱 더 강해지기");
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-
-            int input = CheckInput(0, 3);
-            switch (input)
-            {
-                case 0:
-                    MainMenu(player);
-                    break;
-                case 1:
-                    QuestFirst(player);
-                    break;
-                case 2:
-                    QuestSecond(player);
-                    break;
-                case 3:
-                    QuestThird(player);
-                    break;
-                default:
-                    Console.WriteLine("Error in QuestMenu");
-                    break;
-            }
-        }
-
-        static void QuestFirst(Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("퀘스트\n");
-
-            Console.WriteLine("마을을 위협하는 미니언 처치\n");
-
-            Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
-            Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
-            Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
-
-            Console.WriteLine($"- 미니언 5마리 처치 ({player.questNumber[0]} / 5)\n");
-
-            Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
-            CheckQuest(player, 0);
-        }
-
-        static void QuestSecond(Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("퀘스트\n");
-
-            Console.WriteLine("장비 착용하기\n");
-
-            //Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
-            //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
-            //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
-
-            Console.WriteLine($"- 아무 장비나 착용하기 ({player.questNumber[1]} / 1)\n");
-
-            Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
-            CheckQuest(player, 1);
-        }
-
-        static void QuestThird(Character player)
-        {
-            Console.Clear();
-            Console.WriteLine("퀘스트\n");
-
-            Console.WriteLine("더욱 더 강해지기\n");
-
-            //Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
-            //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
-            //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
-
-            Console.WriteLine($"- 아무 장비나 착용하기 ({player.questNumber[2]} / 1)\n");
-
-            Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
-            CheckQuest(player, 2);
+            Console.WriteLine("게임 오버");
+            Console.WriteLine("체력이 0 이하로 떨어졌습니다.");
 
         }
-        static void CheckQuest(Character player, int questNum)
-        {
-            int questRequired;
-            if (questNum == 0) questRequired = 5;
-            else questRequired = 1;
-
-            if (player.questCleared[questNum] == true)      // 퀘스트를 이미 클리어 한 상태
-            {
-                WriteColoredConsole("\n이미 이 퀘스트를 클리어 하였습니다.", ConsoleColor.Red);
-                Thread.Sleep(1000);
-            }
-            else
-            {
-                if (player.acceptQuest[questNum] == false)  // 퀘스트 수락 한 적 없는 상태
-                {
-                    Console.WriteLine("1. 수락");
-                    Console.WriteLine("2. 거절");
-                    int input = CheckInput(1, 2);
-                    switch (input)
-                    {
-                        case 1:
-                            Console.WriteLine("수락했습니다.");
-                            player.acceptQuest[questNum] = true;
-                            Thread.Sleep(800);
-                            break;
-                        case 2:
-                            Console.WriteLine("거절했습니다.");
-                            Thread.Sleep(800);
-                            break;
-                        default:
-                            Console.WriteLine("Error in CheckQuest - if");
-                            Thread.Sleep(2000);
-                            break;
-                    }
-                }
-                else    // 퀘스트 이미 수락한 상태
-                {
-                    if (player.questNumber[1] < questRequired)  //퀘스트 완료 조건 못채움
-                    {
-                        Console.WriteLine("1. 확인");
-                        int input = CheckInput(1, 1);
-                        if (input != 1)
-                        {
-                            Console.WriteLine("Error in CheckQuest - else");
-                            Thread.Sleep(2000);
-                        }
-                    }
-                    else            // 퀘스트 완료 조건 채움
-                    {
-                        Console.WriteLine("1. 보상 받기");
-                        Console.WriteLine("2. 돌아가기\n");
-
-                        int input = CheckInput(1, 2);
-                        switch (input)
-                        {
-                            case 1:         // 퀘스트 클리어 보상 받기         -> 추후 퀘스트 보상 정할때 고칠 필요 있음
-                                player.acceptQuest[questNum] = false;
-                                player.gold += 100;
-                                //Item item = new Item(이름, 타입, 수치, 가격);
-                                //player.items.Add(item);
-                                player.questCleared[questNum] = true;
-                                break;
-                            case 2:         //  넘어감
-                                break;
-                            default:        //  1,2 외의 다른 인풋(에러)
-                                Console.WriteLine($"Error in CheckQuest - else");
-                                Thread.Sleep(2000);
-                                break;
-                        }
-                    }
-                }
-            }
-            QuestMenu(player);
-        }
-
+        
         //static void SaveCharacter(Character character, string filePath)
         //{
         //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
@@ -708,9 +214,9 @@ namespace TextRPG_project
             itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
 
             // 몬스터 데이터 추가
-            monsterList.Add(new Monster("미니언", 2, 15, 5, false));
-            monsterList.Add(new Monster("공허충", 3, 10, 9, false));
-            monsterList.Add(new Monster("대포미니언", 5, 25, 8, false));
+            monsterList.Add(new Monster("미니언", 2, 15, 5));
+            monsterList.Add(new Monster("공허충", 3, 10, 9));
+            monsterList.Add(new Monster("대포미니언", 5, 25, 8));
 
             // 기본 포션 초기화
             for (int i = 0; i < 3; i++)
