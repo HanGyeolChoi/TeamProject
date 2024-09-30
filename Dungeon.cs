@@ -39,10 +39,6 @@ namespace TextRPG_project
                 Console.WriteLine();
             }
 
-            public void EnemyAttack(Character player)
-            {
-
-            }
             public void PrintMonstersWithNumber()     // 던전 내의 몬스터 정보 출력
             {
                 for (int i = 0; i < monsters.Count; i++)
