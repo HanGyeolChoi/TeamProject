@@ -8,7 +8,7 @@ namespace TextRPG_project
     {
         public class Dungeon
         {
-            List<Monster> monsters;
+            public List<Monster> monsters;
             Random rand;
 
             public Dungeon()        // 던전 내의 몬스터들 초기화
@@ -19,7 +19,8 @@ namespace TextRPG_project
                 for (int i = 0; i < numMonster; i++)
                 {
                     int monsterType = rand.Next(0, 3); // 몬스터 타입 1,2,3중 랜덤
-                    monsters.Add(monsterList[monsterType]);
+                    Monster monster = new Monster(monsterList[monsterType]);
+                    monsters.Add(monster);
                 }
             }
 
@@ -27,13 +28,27 @@ namespace TextRPG_project
             {
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
+                    Console.Write($"Lv. {monsters[i].level}\t{monsters[i].name}  ");
+                    if (!monsters[i].IsDead()) Console.WriteLine($"\tHP {monsters[i].health}");
+                    else Console.WriteLine("\tHP Dead");
                 }
                 Console.WriteLine();
                 Console.WriteLine();
             }
 
-            public void EnemyAttack(Character player)
+            public void PrintMonstersWithNumber()     // 던전 내의 몬스터 정보 출력
+            {
+                for (int i = 0; i < monsters.Count; i++)
+                {
+                    Console.Write($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  ");
+                    if (!monsters[i].IsDead()) Console.WriteLine($"\tHP {monsters[i].health}");
+                    else Console.WriteLine("\tHP Dead");
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+
+            public void EnemyPhase(Character player)
             {
                 int input;
                 for (int i = 0; i < monsters.Count; i++)
@@ -54,7 +69,7 @@ namespace TextRPG_project
                         input = CheckInput(0, 0);
                     }
                 }
-                 Fight(player, this);
+                 EnterDungeon(player, this);
             }
         }
     }

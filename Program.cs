@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
+using static TextRPG_project.Program;
 //using System.Xml;
 //using System.Xml.Linq;
 //using System.Xml.Serialization;
@@ -103,7 +105,8 @@ namespace TextRPG_project
                     break;
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
-                    Fight(player, dungeon);
+                    //player.healthBeforeDungeon = player.health;
+                    EnterDungeon(player, dungeon);
                     break;
                 case 6:
                     QuestMenu(player);
@@ -330,7 +333,7 @@ namespace TextRPG_project
                 SellMenu(items, player);
             }
         }
-        static void Fight(Character player, Dungeon dungeon)
+        static void EnterDungeon(Character player, Dungeon dungeon)
         {
             Console.Clear();
             Console.WriteLine("Battle!");
@@ -342,24 +345,96 @@ namespace TextRPG_project
             Console.WriteLine();
             int input = CheckInput(1, 1);
 
-            if (input == 1)            // 몬스터 공격 선택
+            switch (input)
             {
-                Console.WriteLine("공격 창 출력");
-                Thread.Sleep(2000);                     // 임시 공격 창 출력
-                //Attack(player, dungeon);
-                dungeon.EnemyAttack(player);
+                case 1:
+                    AttackPhase(player, dungeon);
+                    break;
+                //case 2:
+                //    Skill(player, dungeon);
+                //    break;
+                default:
+                    Console.WriteLine("잘못된 입력입니다.- EnterDungeon() 함수 내");
+                    Thread.Sleep(1000);
+                    break;
+            }
+
+        }
+
+        static void AttackPhase(Character player, Dungeon dungeon)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!");
+            Console.WriteLine();
+            dungeon.PrintMonstersWithNumber();
+            player.PrintSimpleStats();
+            Console.WriteLine();
+            Console.WriteLine("0. 취소");
+            Console.WriteLine();
+            int input;
+            int attackDamage;
+            Random rand = new Random();
+            Monster monster;
+            while (true)
+            {
+                Console.WriteLine("대상을 선택해주세요.");
+                Console.Write(">> ");
+                string temp = Console.ReadLine();
+                if (int.TryParse(temp, out input))
+                {
+                    if (input >= 1 && input <= dungeon.monsters.Count)
+                    {
+                        if (dungeon.monsters[input - 1].IsDead())
+                        {
+                            Console.WriteLine("잘못된 입력입니다.");
+                        }
+                        else
+                        {
+                            monster = dungeon.monsters[input - 1];
+                            int errorRange = (player.attack + 9) / 10; // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
+                            attackDamage = rand.Next(player.attack - errorRange, player.attack + errorRange + 1);
+                            break;
+                        }
+                    }
+                    else if (input == 0) EnterDungeon(player, dungeon);    // 0 입력 시 이전으로 돌아감
+                    else Console.WriteLine("잘못된 입력입니다.");
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                }
+                Thread.Sleep(1000);
+                ClearPreviousLines(3);
 
             }
-            //else if (input == 2)      // 스킬이 추가되면 쓸 곳
-            //{
-            //      Skill(player, dungeon);
-            //}
+            AttackResult(player, dungeon, attackDamage, monster);
 
-            //else
-            //{
-            //    Console.WriteLine("잘못된 입력입니다.- Fight() 함수 내");
-            //    Thread.Sleep(1000);
-            //}
+        }
+
+        static void AttackResult(Character player, Dungeon dungeon, int attackDamage, Monster monster)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!");
+            Console.WriteLine();
+            Console.WriteLine($"{player.name}의 공격!");
+            Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
+            Console.WriteLine();
+            Console.WriteLine($"Lv.{monster.level} {monster.name}");
+            Console.Write($"HP {monster.health} -> ");
+            if (monster.health - attackDamage <= 0) Console.WriteLine("Dead");
+            else Console.WriteLine($"{monster.health - attackDamage}");
+            monster.health -= attackDamage;          // 공격 데미지 처리
+            Console.WriteLine();
+            Console.WriteLine("0. 다음");
+            int input = CheckInput(0, 0);
+
+            bool isAllDead = true;
+            foreach (Monster mons in dungeon.monsters)
+            {
+                if (!mons.IsDead()) isAllDead = false;
+            }
+
+
         }
 
         static void QuestMenu(Character player)
@@ -525,6 +600,7 @@ namespace TextRPG_project
             }
             QuestMenu(player);
         }
+
         static void GameOver()
         {
             Console.Clear();
