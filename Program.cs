@@ -105,8 +105,9 @@ namespace TextRPG_project
                     break;
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
-                    //player.healthBeforeDungeon = player.health;
+                    player.lasthp = player.health;
                     EnterDungeon(player, dungeon);
+                    dungeon.DeadCount = 0;
                     break;
                 case 6:
                     QuestMenu(player);
@@ -335,6 +336,7 @@ namespace TextRPG_project
         }
         static void EnterDungeon(Character player, Dungeon dungeon)
         {
+
             Console.Clear();
             Console.WriteLine("Battle!");
             Console.WriteLine();
@@ -433,9 +435,57 @@ namespace TextRPG_project
             {
                 if (!mons.IsDead()) isAllDead = false;
             }
+            if (isAllDead) GameClear(player, dungeon);
+            else dungeon.EnemyPhase(player);
+        }
 
+        static void GameOver(Character player)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result");
+            Console.WriteLine("\nYou Lose");
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            //Console.WriteLine("\n0. 처음부터 다시 시작하기");
+            Console.WriteLine("\n0. 게임 종료하기");
+            int input = CheckInput(0, 0);
+
+            switch (input)
+            {
+                //case 0:
+                //    Start();
+                //    break;
+                case 0:
+                    break;
+                default:
+                    Console.WriteLine("Error in GameOver");
+                    Thread.Sleep(1000);
+                    break;
+            }
+        }
+
+        static void GameClear(Character player, Dungeon dungeon)
+        {
+            Console.Clear();
+            Console.WriteLine("Battle!! - Result");
+            Console.WriteLine("\nYou Win");
+            Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
+            Console.WriteLine($"\nLV{player.level} {player.name}");
+            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            Console.WriteLine("\n0. 돌아가기");
+            int input = CheckInput(0, 0);
+
+            switch (input)
+            {
+                case 0:
+                    MainMenu(player);
+                    break;
+                default:
+                    break;
+            }
 
         }
+
 
         static void QuestMenu(Character player)
         {
@@ -449,7 +499,7 @@ namespace TextRPG_project
             Console.WriteLine();
 
             int input = CheckInput(0, 3);
-            switch(input)
+            switch (input)
             {
                 case 0:
                     MainMenu(player);
@@ -466,22 +516,22 @@ namespace TextRPG_project
                 default:
                     Console.WriteLine("Error in QuestMenu");
                     break;
-            }            
+            }
         }
 
         static void QuestFirst(Character player)
         {
             Console.Clear();
             Console.WriteLine("퀘스트\n");
-            
+
             Console.WriteLine("마을을 위협하는 미니언 처치\n");
-            
+
             Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
             Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
             Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
-            
+
             Console.WriteLine($"- 미니언 5마리 처치 ({player.questNumber[0]} / 5)\n");
-            
+
             Console.WriteLine("- 보상 -");
             //Console.WriteLine("대충 아이템 이름");
             Console.WriteLine("100G\n");
@@ -601,67 +651,6 @@ namespace TextRPG_project
             QuestMenu(player);
         }
 
-        static void GameOver()
-        {
-            Console.Clear();
-            Console.WriteLine("게임 오버");
-            Console.WriteLine("체력이 0 이하로 떨어졌습니다.");
-
-        }
-
-        static int CheckInput(int min, int max)
-        {
-            Console.WriteLine("\n원하시는 행동을 선택해주세요.");
-            Console.Write(">>");
-            int result;
-            string input = Console.ReadLine();
-            bool isNumber = int.TryParse(input, out result);
-            if (isNumber)
-            {
-                if (result >= min && result <= max)
-                {
-                    return result;
-                }
-            }
-            Console.WriteLine("잘못된 입력입니다.");
-            Thread.Sleep(1000);
-            ClearPreviousLines(4);
-            return CheckInput(min, max);
-        }
-
-        static void ClearPreviousLines(int numberOfLines)
-        {
-            int currentLineCursor = Console.CursorTop;
-            for (int i = 0; i < numberOfLines; i++)
-            {
-                Console.SetCursorPosition(0, currentLineCursor - 1 - i);
-                Console.Write(new string(' ', Console.WindowWidth));
-            }
-            Console.SetCursorPosition(0, currentLineCursor - numberOfLines);
-        }
-        
-        static int GetStringLenghth(string input)
-        {
-            int len = 0;
-            foreach (char c in input)
-            {
-                // 한글일 경우 너비를 2로, 영어일 경우 1로 계산
-                // if (c >= 'ㄱ' && c <= 'ㅎ' || c >= '가' && c <= '힣')
-                if (c >= 0x1100 && c <= 0x11FF || c >= 0xAC00 && c <= 0xD7A3)
-                    len += 2;
-                else
-                    len += 1;
-            }
-            return len;
-        }
-
-        static void WriteColoredConsole(string input, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(input);
-            Console.ResetColor();
-        }
-
         //static void SaveCharacter(Character character, string filePath)
         //{
         //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
@@ -679,7 +668,6 @@ namespace TextRPG_project
         //        return (Character)serializer.Deserialize(stream);
         //    }
         //}
-        
 
         static void Main(string[] args)
         {
@@ -700,9 +688,9 @@ namespace TextRPG_project
             itemList.Add(new Item("스파르타의 창", 2, 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", 2300));
 
             // 몬스터 데이터 추가
-            monsterList.Add(new Monster("미니언", 2, 15, 5));
-            monsterList.Add(new Monster("공허충", 3, 10, 9));
-            monsterList.Add(new Monster("대포미니언", 5, 25, 8));
+            monsterList.Add(new Monster("미니언", 2, 15, 5, false));
+            monsterList.Add(new Monster("공허충", 3, 10, 9, false));
+            monsterList.Add(new Monster("대포미니언", 5, 25, 8, false));
 
             // 기본 포션 초기화
             for (int i = 0; i < 3; i++)

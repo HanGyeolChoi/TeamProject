@@ -14,7 +14,7 @@ namespace TextRPG_project
             public int attack;
             public int defence;
             public int health;
-            //public int healthBeforeDungeon;
+            public int lasthp;
             public int gold;
             private int itemAttack;     //아이템으로 올라간 총 공격력
             private int itemDefence;    //아이템으로 올라간 총 방어력
@@ -33,7 +33,7 @@ namespace TextRPG_project
                 attack = 10;
                 defence = 5;
                 health = 100;
-                //healthBeforeDungeon = 100;
+                lasthp = 100;
                 gold = 1500;
                 items = new List<Item>();
                 //exp = 0;
