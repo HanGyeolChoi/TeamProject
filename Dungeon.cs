@@ -29,22 +29,20 @@ namespace TextRPG_project
             {
                 for (int i = 0; i < monsters.Count; i++)
                 {
-<<<<<<< Updated upstream
                     Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
-=======
                     if (!monsters[i].IsDead())
                         Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     else
                         WriteColoredConsole($"Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
->>>>>>> Stashed changes
                 }
                 Console.WriteLine();
                 Console.WriteLine();
             }
 
-<<<<<<< Updated upstream
             public void EnemyAttack(Character player)
-=======
+            {
+
+            }
             public void PrintMonstersWithNumber()     // 던전 내의 몬스터 정보 출력
             {
                 for (int i = 0; i < monsters.Count; i++)
@@ -59,7 +57,6 @@ namespace TextRPG_project
             }
 
             public void EnemyPhase(Character player)
->>>>>>> Stashed changes
             {
                 int input;
                 for (int i = 0; i < monsters.Count; i++)
@@ -97,9 +94,6 @@ namespace TextRPG_project
                         break;
                     }
                 }
-<<<<<<< Updated upstream
-                 Fight(player, this);
-=======
                  if(player.health > 0) EnterDungeon(player);
             }
 
@@ -226,7 +220,6 @@ namespace TextRPG_project
                 }
                 if (isAllDead) GameClear(player, this);
                 else EnemyPhase(player);
->>>>>>> Stashed changes
             }
         }
     }
