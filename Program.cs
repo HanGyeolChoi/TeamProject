@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Numerics;
 using static System.Net.Mime.MediaTypeNames;
+using static TextRPG_project.Program;
 //using System.Xml;
 //using System.Xml.Linq;
 //using System.Xml.Serialization;

@@ -14,10 +14,11 @@ namespace TextRPG_project
             public int attack;
             public int defence;
             public int health;
+            public int lasthp;
             public int gold;
             private int itemAttack;     //아이템으로 올라간 총 공격력
             private int itemDefence;    //아이템으로 올라간 총 방어력
-            public int numberDungeonClear;
+            public int experience;      //경험치
             public List<Item> items;   // 인벤토리의 아이템
             private Item? equippedArmor;
             private Item? equippedWeapon;
@@ -29,12 +30,21 @@ namespace TextRPG_project
                 level = 1;
                 name = _name;
                 class_type = class_num;
-                attack = 10;
-                defence = 5;
+                if (class_num == 1)
+                {
+                    attack = 10;
+                    defence = 5;
+                }
+                else
+                {
+                    attack = 13;
+                    defence = 4;
+                }
                 health = 100;
+                lasthp = 100;
                 gold = 1500;
                 items = new List<Item>();
-                //numberDungeonClear = 0;
+                //exp = 0;
                 //itemAttack = 0;
                 //itemDefence = 0;      //자동으로 0으로 초기화됨
                 equippedArmor = null;
@@ -78,7 +88,7 @@ namespace TextRPG_project
                 if (itemDefence > 0) Console.Write($"( +{itemDefence})");
                 Console.WriteLine($"\n체  력\t: {health}");
                 Console.WriteLine($"Gold\t: {gold}");
-                Console.WriteLine($"경험치\t: {numberDungeonClear} / {level}");
+                Console.WriteLine($"경험치\t: {experience} / {level}");
 
                 Console.WriteLine("\n0. 나가기");
                 int input = CheckInput(0, 0);

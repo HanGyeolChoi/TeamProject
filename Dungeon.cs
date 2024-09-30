@@ -8,8 +8,10 @@ namespace TextRPG_project
     {
         public class Dungeon
         {
-            List<Monster> monsters;
+            public List<Monster> monsters;
             Random rand;
+            public int DeadCount = 0;
+            public bool Clear = false;
 
             public Dungeon()        // 던전 내의 몬스터들 초기화
             {
@@ -19,10 +21,10 @@ namespace TextRPG_project
                 for (int i = 0; i < numMonster; i++)
                 {
                     int monsterType = rand.Next(0, 3); // 몬스터 타입 1,2,3중 랜덤
-                    monsters.Add(monsterList[monsterType]);
+                    Monster monster = new Monster(monsterList[monsterType]);
+                    monsters.Add(monster);
                 }
             }
-
             public void PrintMonsters()     // 던전 내의 몬스터 정보 출력
             {
                 for (int i = 0; i < monsters.Count; i++)
@@ -76,6 +78,23 @@ namespace TextRPG_project
                         Console.WriteLine();
                         Console.WriteLine("0. 다음");
                         input = CheckInput(0, 0);
+                    }
+                    //if (monsters[i].health <= 0)
+                    //{
+                    //    DeadCount++;
+                    //    monsters[i].dead = true;
+
+                    //    if (DeadCount == monsters.Count)
+                    //    {
+                    //        Clear = true;
+                    //    }
+
+                    //}
+                    if(player.health <= 0)
+                    {
+                        player.health = 0;
+                        GameOver(player);
+                        break;
                     }
                 }
 <<<<<<< Updated upstream
