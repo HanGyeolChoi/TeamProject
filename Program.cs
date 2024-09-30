@@ -409,6 +409,7 @@ namespace TextRPG_project
                 ClearPreviousLines(3);
 
             }
+
             AttackResult(player, dungeon, attackDamage, monster);
 
         }
@@ -416,15 +417,34 @@ namespace TextRPG_project
         static void AttackResult(Character player, Dungeon dungeon, int attackDamage, Monster monster)
         {
             Console.Clear();
+            Random rand = new Random();
+            bool isCrit = false;
+            int critical = rand.Next(1, 21);
+            if (critical < 4) isCrit = true;             // 치명타 확률계산
+            bool isEvade = false;
+            int evasion = rand.Next(1, 11);
+            if (evasion == 1) isEvade = true;
+
             Console.WriteLine("Battle!");
             Console.WriteLine();
             Console.WriteLine($"{player.name}의 공격!");
-            Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
-            Console.WriteLine();
-            Console.WriteLine($"Lv.{monster.level} {monster.name}");
-            Console.Write($"HP {monster.health} -> ");
-            if (monster.health - attackDamage <= 0) Console.WriteLine("Dead");
-            else Console.WriteLine($"{monster.health - attackDamage}");
+            if (isEvade)
+            {
+                Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                attackDamage = 0;
+            }
+            else
+            {
+                if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
+                Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
+                if (isCrit) Console.Write(" - 치명타 공격!!");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine($"Lv.{monster.level} {monster.name}");
+                Console.Write($"HP {monster.health} -> ");
+                if (monster.health - attackDamage <= 0) Console.WriteLine("Dead");
+                else Console.WriteLine($"{monster.health - attackDamage}");
+            }
             monster.health -= attackDamage;          // 공격 데미지 처리
             Console.WriteLine();
             Console.WriteLine("0. 다음");

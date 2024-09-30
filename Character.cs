@@ -30,8 +30,16 @@ namespace TextRPG_project
                 level = 1;
                 name = _name;
                 class_type = class_num;
-                attack = 10;
-                defence = 5;
+                if (class_num == 1)
+                {
+                    attack = 10;
+                    defence = 5;
+                }
+                else
+                {
+                    attack = 13;
+                    defence = 4;
+                }
                 health = 100;
                 lasthp = 100;
                 gold = 1500;
