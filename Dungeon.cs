@@ -88,14 +88,14 @@ namespace TextRPG_project
                     //    }
 
                     //}
-                    if(player.health <= 0)
+                    if (player.health <= 0)
                     {
                         player.health = 0;
                         GameOver(player);
                         break;
                     }
                 }
-                 if(player.health > 0) EnterDungeon(player);
+                if (player.health > 0) EnterDungeon(player);
             }
 
             public void EnterDungeon(Character player)
@@ -143,7 +143,7 @@ namespace TextRPG_project
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 취소");
                 
-                AttackInput(player,1);
+                AttackInput(player, 1);
             }
 
             void Skill(Character player)
@@ -168,7 +168,7 @@ namespace TextRPG_project
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 취소");
                 //}
-                
+
                 //else if (player.class_type == 2)                // 도적일 경우
                 //{
                 //    Console.WriteLine("1.\t알파 스트라이크 - MP 10");
@@ -217,16 +217,16 @@ namespace TextRPG_project
 
                     else
                     {
-                        
-                        if(monsters.Count - DeadCount > 1)
+
+                        if (monsters.Count - DeadCount > 1)
                         {
                             List<Monster> liveMonsters = new List<Monster>();       // 살아있는 monster의 List
                             liveMonsters = monsters.ToList();
-                            for(int i=liveMonsters.Count-1; i>=0; i--)
+                            for (int i = liveMonsters.Count - 1; i >= 0; i--)
                             {
                                 if (liveMonsters[i].IsDead()) liveMonsters.Remove(liveMonsters[i]);     // 죽은 monster를 List에서 제외시킴
                             }
-                            while(liveMonsters.Count > 2)
+                            while (liveMonsters.Count > 2)
                             {
                                 liveMonsters.Remove(liveMonsters[rand.Next(0, liveMonsters.Count)]);    // 2마리가 남을때까지 제외시킴
                             }
@@ -297,8 +297,21 @@ namespace TextRPG_project
                 Console.WriteLine(". 다음");
                 int input = CheckInput(0, 0);
 
-
-                if (DeadCount == monsters.Count) GameClear(player, this);
+                if (DeadCount == monsters.Count)
+                {
+                    // 퀘스트1(미니언 처치) 수락한 상태고 완료된 상태가 아니면
+                    if (player.acceptQuest[0] && !player.questCleared[0])
+                    {
+                        int deadMinion = 0;
+                        foreach (Monster mon in monsters)
+                        {
+                            if (mon.level == 2)
+                                deadMinion++;
+                        }
+                        player.questNumber[0] += deadMinion; // 처치한 미니언의 수 더하기
+                    }
+                    GameClear(player, this);
+                }
                 else EnemyPhase(player);
             }
 
