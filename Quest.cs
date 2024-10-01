@@ -115,8 +115,10 @@ namespace TextRPG_project
             {
                 if (player.acceptQuest[questNum] == false)  // 퀘스트 수락 한 적 없는 상태
                 {
-                    Console.WriteLine("1. 수락");
-                    Console.WriteLine("2. 거절");
+                    WriteColoredConsole("1", ConsoleColor.Red);
+                    Console.WriteLine(". 수락");
+                    WriteColoredConsole("2", ConsoleColor.Red);
+                    Console.WriteLine(". 거절");
                     int input = CheckInput(1, 2);
                     switch (input)
                     {
@@ -139,7 +141,8 @@ namespace TextRPG_project
                 {
                     if (player.questNumber[questNum] < questRequired)  //퀘스트 완료 조건 못채움
                     {
-                        Console.WriteLine("1. 확인");
+                        WriteColoredConsole("1", ConsoleColor.Red);
+                        Console.WriteLine(". 확인");
                         int input = CheckInput(1, 1);
                         if (input != 1)
                         {
@@ -149,8 +152,10 @@ namespace TextRPG_project
                     }
                     else            // 퀘스트 완료 조건 채움
                     {
-                        Console.WriteLine("1. 보상 받기");
-                        Console.WriteLine("2. 돌아가기\n");
+                        WriteColoredConsole("1", ConsoleColor.Red);
+                        Console.WriteLine(". 보상 받기");
+                        WriteColoredConsole("2", ConsoleColor.Red);
+                        Console.WriteLine(". 돌아가기\n");
 
                         int input = CheckInput(1, 2);
                         switch (input)
