@@ -168,6 +168,8 @@ namespace TextRPG_project
             Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
             Console.WriteLine($"\nLV{player.level} {player.name}");
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
+            Console.WriteLine($"남은 MP {player.mp} -> {player.mp + 10} (+10)");
+            player.mp += 10;
             GetPotion();    // 10%의 확률로 포션 획득
             Console.WriteLine("\n0. 돌아가기");
             int input = CheckInput(0, 0);
@@ -182,13 +184,7 @@ namespace TextRPG_project
             }
         }
 
-        static void GameOver()
-        {
-            Console.Clear();
-            Console.WriteLine("게임 오버");
-            Console.WriteLine("체력이 0 이하로 떨어졌습니다.");
 
-        }
         
         //static void SaveCharacter(Character character, string filePath)
         //{

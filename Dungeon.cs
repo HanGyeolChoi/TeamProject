@@ -2,6 +2,8 @@
 //using System.Xml.Linq;
 //using System.Xml.Serialization;
 
+using static TextRPG_project.Program;
+
 namespace TextRPG_project
 {
     internal partial class Program
@@ -102,17 +104,18 @@ namespace TextRPG_project
                 player.PrintSimpleStats();
                 Console.WriteLine();
                 Console.WriteLine("1. 공격");
+                Console.WriteLine("2. 스킬");
                 Console.WriteLine();
-                int input = CheckInput(1, 1);
+                int input = CheckInput(1, 2);
 
                 switch (input)
                 {
                     case 1:
                         AttackPhase(player);
                         break;
-                    //case 2:
-                    //    Skill(player, dungeon);
-                    //    break;
+                    case 2:
+                        Skill(player);
+                        break;
                     default:
                         Console.WriteLine("잘못된 입력입니다.- EnterDungeon() 함수 내");
                         Thread.Sleep(1000);
@@ -130,91 +133,192 @@ namespace TextRPG_project
                 player.PrintSimpleStats();
                 Console.WriteLine();
                 Console.WriteLine("0. 취소");
+                
+                AttackInput(player,1);
+            }
+
+            void Skill(Character player)
+            {
+                Console.Clear();
+                Console.WriteLine("Battle!");
                 Console.WriteLine();
-                int input;
+                PrintMonsters();
+                player.PrintSimpleStats();
+                Console.WriteLine();
+                
                 int attackDamage;
                 Random rand = new Random();
                 Monster monster;
-                while (true)
+
+                //if (player.class_type == 1)                     // 전사일 경우
+                //{
+                    Console.WriteLine("1. 알파 스트라이크 - MP 10");
+                    Console.WriteLine("   공격력 * 2 로 하나의 적을 공격합니다.");
+                    Console.WriteLine("2. 더블 스트라이크 - MP 15");
+                    Console.WriteLine("   공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+                    Console.WriteLine("0. 취소");
+                //}
+                
+                //else if (player.class_type == 2)                // 도적일 경우
+                //{
+                //    Console.WriteLine("1.\t알파 스트라이크 - MP 10");
+                //    Console.WriteLine("\t공격력 * 2 로 하나의 적을 공격합니다.");
+                //    Console.WriteLine("2.\t더블 스트라이크 - MP 15");
+                //    Console.WriteLine("\t공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+                //    Console.WriteLine("0.\t취소");
+                //}
+
+                int input = CheckInput(0, 2);
+                if (input == 0)
                 {
-                    Console.WriteLine("대상을 선택해주세요.");
-                    Console.Write(">> ");
-                    string temp = Console.ReadLine();
-                    if (int.TryParse(temp, out input))
+                    EnterDungeon(player);
+                }
+                else if (input == 1)
+                {
+                    if (player.mp < 10)
                     {
-                        if (input >= 1 && input <= monsters.Count)
-                        {
-                            if (monsters[input - 1].IsDead())
-                            {
-                                Console.WriteLine("잘못된 입력입니다.");
-                            }
-                            else
-                            {
-                                monster = monsters[input - 1];
-                                int errorRange = (player.attack + 9) / 10; // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
-                                attackDamage = rand.Next(player.attack - errorRange, player.attack + errorRange + 1);
-                                break;
-                            }
-                        }
-                        else if (input == 0) EnterDungeon(player);    // 0 입력 시 이전으로 돌아감
-                        else Console.WriteLine("잘못된 입력입니다.");
+                        Console.WriteLine("MP가 부족합니다.");
+                        Thread.Sleep(1000);
+                        Skill(player);
                     }
+
                     else
                     {
-                        Console.WriteLine("잘못된 입력입니다.");
+                        Console.Clear();
+                        Console.WriteLine("Battle!");
+                        Console.WriteLine();
+                        PrintMonstersWithNumber();
+                        player.PrintSimpleStats();
+                        Console.WriteLine();
+                        Console.WriteLine("0. 취소");
+                        AttackInput(player, 2);
                     }
-                    Thread.Sleep(1000);
-                    ClearPreviousLines(3);
 
                 }
+                else if (input == 2)
+                {
+                    if (player.mp < 15)
+                    {
+                        Console.WriteLine("MP가 부족합니다.");
+                        Thread.Sleep(1000);
+                        Skill(player);
+                    }
 
-                AttackResult(player, attackDamage, monster);
+                    else
+                    {
+                        
+                        if(monsters.Count - DeadCount > 1)
+                        {
+                            List<Monster> liveMonsters = new List<Monster>();       // 살아있는 monster의 List
+                            liveMonsters = monsters.ToList();
+                            for(int i=liveMonsters.Count-1; i>=0; i--)
+                            {
+                                if (liveMonsters[i].IsDead()) liveMonsters.Remove(liveMonsters[i]);     // 죽은 monster를 List에서 제외시킴
+                            }
+                            while(liveMonsters.Count > 2)
+                            {
+                                liveMonsters.Remove(liveMonsters[rand.Next(0, liveMonsters.Count)]);    // 2마리가 남을때까지 제외시킴
+                            }
+                            player.mp -= 15;
+                            AttackResult(player, (int)(player.attack * 1.5f), liveMonsters);
+                        }
 
+                        else
+                        {
+                            Console.WriteLine("남은 몬스터가 부족합니다.");
+                            Thread.Sleep(1000);
+                            Skill(player);
+                        }
+                    }
+                }
             }
 
-            void AttackResult(Character player, int attackDamage, Monster monster)
+
+            void AttackResult(Character player, int damage, List<Monster> attackedmonsters)
             {
                 Console.Clear();
                 Random rand = new Random();
-                bool isCrit = false;
-                int critical = rand.Next(1, 21);
-                if (critical < 4) isCrit = true;             // 치명타 확률계산
-                bool isEvade = false;
-                int evasion = rand.Next(1, 11);
-                if (evasion == 1) isEvade = true;
+
 
                 Console.WriteLine("Battle!");
                 Console.WriteLine();
                 Console.WriteLine($"{player.name}의 공격!");
-                if (isEvade)
+                for (int i = 0; i < attackedmonsters.Count; i++)
                 {
-                    Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
-                    attackDamage = 0;
-                }
-                else
-                {
-                    if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
-                    Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
-                    if (isCrit) Console.Write(" - 치명타 공격!!");
+                    Monster monster = attackedmonsters[i];
+                    bool isCrit = false;
+                    int critical = rand.Next(1, 21);
+                    if (critical < 4) isCrit = true;             // 치명타 확률계산
+                    bool isEvade = false;
+                    int evasion = rand.Next(1, 11);
+                    if (evasion == 1) isEvade = true;
+                    int attackDamage;
+                    if (isEvade)
+                    {
+                        Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                        attackDamage = 0;
+                    }
+                    else
+                    {
+
+                        int errorRange = (damage + 9) / 10;   // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
+                        attackDamage = rand.Next(damage - errorRange, damage + errorRange + 1);
+                        if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
+                        Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
+                        if (isCrit) Console.Write(" - 치명타 공격!!");
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Console.WriteLine($"Lv.{monster.level} {monster.name}");
+                        Console.Write($"HP {monster.health} -> ");
+                        if (monster.health - attackDamage <= 0)
+                        {
+                            Console.WriteLine("Dead");
+                            DeadCount++;
+                        }
+                        else Console.WriteLine($"{monster.health - attackDamage}");
+                    }
+                    monster.health -= attackDamage;          // 공격 데미지 처리
                     Console.WriteLine();
-                    Console.WriteLine();
-                    Console.WriteLine($"Lv.{monster.level} {monster.name}");
-                    Console.Write($"HP {monster.health} -> ");
-                    if (monster.health - attackDamage <= 0) Console.WriteLine("Dead");
-                    else Console.WriteLine($"{monster.health - attackDamage}");
                 }
-                monster.health -= attackDamage;          // 공격 데미지 처리
+
                 Console.WriteLine();
                 Console.WriteLine("0. 다음");
                 int input = CheckInput(0, 0);
 
-                bool isAllDead = true;
-                foreach (Monster mons in monsters)
-                {
-                    if (!mons.IsDead()) isAllDead = false;
-                }
-                if (isAllDead) GameClear(player, this);
+
+                if (DeadCount == monsters.Count) GameClear(player, this);
                 else EnemyPhase(player);
+            }
+
+            void AttackInput(Character player, int attackOrSkill) // attack일 시 1, skill-1일시 2
+            {
+                int input = CheckInput(0, monsters.Count);
+                if (input == 0)
+                {
+                    if (attackOrSkill == 1) EnterDungeon(player);
+                    else Skill(player);
+                }
+                else if (input >= 1 && input <= monsters.Count)
+                {
+                    if (monsters[input - 1].IsDead())
+                    {
+                        Console.WriteLine("잘못된 입력입니다.");
+                        Thread.Sleep(1000);
+                        ClearPreviousLines(4);
+                        AttackInput(player, attackOrSkill);
+                    }
+                    else
+                    {
+                        Monster monster = monsters[input - 1];
+                        int attackDamage = player.attack * attackOrSkill;
+                        if (attackOrSkill == 2) player.mp -= 10;
+                        List<Monster> attackedmonsters = new List<Monster>
+                        {
+                            monster
+                        };
+                        AttackResult(player, attackDamage, attackedmonsters);
+                    }
+                }
             }
         }
     }
