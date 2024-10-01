@@ -22,12 +22,34 @@ namespace TextRPG_project
         {
             Console.Clear();
             Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
-            if (LoadData(ref player, itemList, potionList))
-            {
-                isDataLoaded = true;
-                return player.name;
-            }
 
+            string fileName = "..\\..\\..\\PlayData\\PlayerData.json"; // 플레이어 데이터 경로명
+            if (File.Exists(fileName))  // 저장된 데이터 있으면
+            {
+                Console.WriteLine("저장된 데이터를 불러오시겠습니까?");
+                WriteColoredConsole("1", ConsoleColor.Red);
+                Console.WriteLine(". 데이터 불러오기");
+                WriteColoredConsole("2", ConsoleColor.Red);
+                Console.WriteLine(". 새로 시작하기");
+
+                int choice = CheckInput(1, 2);
+
+                if (choice == 1)    // 저장된 데이터 불러오기
+                {
+                    if (LoadData(ref player, itemList, potionList))
+                    {
+                        isDataLoaded = true;
+                        return player.name;
+                    }
+                }
+                else if (choice == 2) { }   // 새로 시작하기
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Thread.Sleep(1000);
+                    return Start();
+                }
+            }
             Console.WriteLine("원하시는 이름을 선택해주세요.\n");
             
             string name = Console.ReadLine();

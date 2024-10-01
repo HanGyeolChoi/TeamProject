@@ -82,7 +82,7 @@ namespace TextRPG_project
             string potionDataFileName = "PotionData.json";
 
             // 데이터 경로 저장 (중단점 이용하여 경로 확인하기)
-            string folderName = "../../../PlayData";
+            string folderName = "..\\..\\..\\PlayData";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalizedResources);
             path = Path.Combine(path, folderName);
 
@@ -112,7 +112,7 @@ namespace TextRPG_project
             string potionDataFileName = "PotionData.json";
 
             // 데이터 경로 저장 (중단점 이용하여 경로 확인하기)
-            string folderName = "../../../PlayData";
+            string folderName = "..\\..\\..\\PlayData";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalizedResources);
             path = Path.Combine(path, folderName);
 
