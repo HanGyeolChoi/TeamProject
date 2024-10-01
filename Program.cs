@@ -32,8 +32,11 @@ namespace TextRPG_project
             
             string name = Console.ReadLine();
 
-            Console.WriteLine($"\n설정하신 이름은 {name}입니다.\n");
-            Console.WriteLine("1. 저장\n2. 취소");
+            Console.WriteLine($"\n설정하신 이름은 \"{name}\" 입니다.\n");
+            WriteColoredConsole("1", ConsoleColor.Red);
+            Console.WriteLine(". 저장");
+            WriteColoredConsole("2",ConsoleColor.Red);
+            Console.WriteLine(". 취소");
 
             int input = CheckInput(1, 2);
 
@@ -59,13 +62,19 @@ namespace TextRPG_project
             Console.Clear();
             Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
             Console.WriteLine("원하시는 직업을 선택해주세요.\n");
-            Console.WriteLine("1. 전사\n2. 도적\n");
+            WriteColoredConsole("1", ConsoleColor.Red);
+            Console.WriteLine(". 전사");
+            WriteColoredConsole("2", ConsoleColor.Red);
+            Console.WriteLine(". 도적\n");
             int class_type = CheckInput(1, 2);
 
             if (class_type == 1) Console.WriteLine("\n고른 직업은 전사입니다.\n");
             else if (class_type == 2) Console.WriteLine("\n고른 직업은 도적 입니다.\n");
 
-            Console.WriteLine("1. 저장\n2. 취소");
+            WriteColoredConsole("1", ConsoleColor.Red);
+            Console.WriteLine(". 저장");
+            WriteColoredConsole("2", ConsoleColor.Red);
+            Console.WriteLine(". 취소");
 
             int input = CheckInput(1, 2);
 
@@ -85,14 +94,22 @@ namespace TextRPG_project
             Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
             Console.WriteLine("이곳에서 던전에 들어가기 전 활동을 할 수 있습니다.\n");
 
-            Console.WriteLine("1. 상태 보기");
-            Console.WriteLine("2. 인벤토리");
-            Console.WriteLine("3. 상점");
-            Console.WriteLine("4. 체력 회복하기");
-            Console.WriteLine("5. 전투 시작");
-            Console.WriteLine("6. 퀘스트");
-            Console.WriteLine("7. 데이터 저장");
-            Console.WriteLine("0. 종료");
+            WriteColoredConsole("1. ", ConsoleColor.Red);
+            Console.WriteLine("상태 보기");
+            WriteColoredConsole("2. ", ConsoleColor.Red);
+            Console.WriteLine("인벤토리");
+            WriteColoredConsole("3. ", ConsoleColor.Red);
+            Console.WriteLine("상점");
+            WriteColoredConsole("4. ", ConsoleColor.Red);
+            Console.WriteLine("체력 회복하기");
+            WriteColoredConsole("5. ", ConsoleColor.Red);
+            Console.WriteLine("전투 시작");
+            WriteColoredConsole("6. ", ConsoleColor.Red);
+            Console.WriteLine("퀘스트");
+            WriteColoredConsole("7. ", ConsoleColor.Red);
+            Console.WriteLine("데이터 저장");
+            WriteColoredConsole("0. ", ConsoleColor.Red);
+            Console.WriteLine("종료");
 
             int input = CheckInput(0, 7);
 

@@ -44,8 +44,10 @@ namespace TextRPG_project
             {
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    if (!monsters[i].IsDead())
-                        Console.WriteLine($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
+                    if (!monsters[i].IsDead()) {
+                        WriteColoredConsole($"{i+1}.", ConsoleColor.Red);
+                        Console.WriteLine($" Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
+                    }
                     else
                         WriteLineColoredConsole($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
                 }
@@ -71,7 +73,8 @@ namespace TextRPG_project
                         player.health -= damage;
 
                         Console.WriteLine();
-                        Console.WriteLine("0. 다음");
+                        WriteColoredConsole("0", ConsoleColor.Red);
+                        Console.WriteLine(". 다음");
                         input = CheckInput(0, 0);
                     }
                     //if (monsters[i].health <= 0)
@@ -104,8 +107,12 @@ namespace TextRPG_project
                 PrintMonsters();
                 player.PrintSimpleStats();
                 Console.WriteLine();
-                Console.WriteLine("1. 공격");
-                Console.WriteLine("2. 스킬");
+                WriteColoredConsole("1", ConsoleColor.Red);
+                Console.WriteLine(". 공격");
+                WriteColoredConsole("2", ConsoleColor.Red);
+                Console.WriteLine(". 스킬");
+                WriteColoredConsole("3", ConsoleColor.Red);
+                Console.WriteLine(". 포션 사용");
                 Console.WriteLine();
                 int input = CheckInput(1, 2);
 
@@ -133,7 +140,8 @@ namespace TextRPG_project
                 PrintMonstersWithNumber();
                 player.PrintSimpleStats();
                 Console.WriteLine();
-                Console.WriteLine("0. 취소");
+                WriteColoredConsole("0", ConsoleColor.Red);
+                Console.WriteLine(". 취소");
                 
                 AttackInput(player,1);
             }
@@ -151,11 +159,14 @@ namespace TextRPG_project
 
                 //if (player.class_type == 1)                     // 전사일 경우
                 //{
-                    Console.WriteLine("1. 알파 스트라이크 - MP 10");
-                    Console.WriteLine("   공격력 * 2 로 하나의 적을 공격합니다.");
-                    Console.WriteLine("2. 더블 스트라이크 - MP 15");
-                    Console.WriteLine("   공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
-                    Console.WriteLine("0. 취소");
+                WriteColoredConsole("1", ConsoleColor.Red);
+                Console.WriteLine(". 알파 스트라이크 - MP 10");
+                Console.WriteLine("   공격력 * 2 로 하나의 적을 공격합니다.");
+                WriteColoredConsole("2", ConsoleColor.Red);
+                Console.WriteLine(". 더블 스트라이크 - MP 15");
+                Console.WriteLine("   공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+                WriteColoredConsole("0", ConsoleColor.Red);
+                Console.WriteLine(". 취소");
                 //}
                 
                 //else if (player.class_type == 2)                // 도적일 경우
@@ -189,7 +200,8 @@ namespace TextRPG_project
                         PrintMonstersWithNumber();
                         player.PrintSimpleStats();
                         Console.WriteLine();
-                        Console.WriteLine("0. 취소");
+                        WriteColoredConsole("0", ConsoleColor.Red);
+                        Console.WriteLine(". 취소");
                         AttackInput(player, 2);
                     }
 
@@ -281,7 +293,8 @@ namespace TextRPG_project
                 }
 
                 Console.WriteLine();
-                Console.WriteLine("0. 다음");
+                WriteColoredConsole("0", ConsoleColor.Red);
+                Console.WriteLine(". 다음");
                 int input = CheckInput(0, 0);
 
 

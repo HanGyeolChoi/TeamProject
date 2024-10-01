@@ -24,9 +24,12 @@ namespace TextRPG_project
                 else Console.WriteLine(" | 구매 완료");
             }
 
-            Console.WriteLine("\n1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-            Console.WriteLine("0. 나가기");
+            WriteColoredConsole("\n1", ConsoleColor.Red);
+            Console.WriteLine(". 아이템 구매");
+            WriteColoredConsole("2", ConsoleColor.Red);
+            Console.WriteLine(". 아이템 판매");
+            WriteColoredConsole("0", ConsoleColor.Red);
+            Console.WriteLine(". 나가기");
 
             int input = CheckInput(0, 2);
 
@@ -56,13 +59,15 @@ namespace TextRPG_project
             Console.WriteLine("[아이템 목록]");
             for (int i = 0; i < items.Count; i++)
             {
-                Console.Write($"- {i + 1} ");
+                Console.Write("- ");
+                WriteColoredConsole($"{i + 1}", ConsoleColor.Red);
+                Console.Write(". ");
                 items[i].ShowItem();
                 if (!items[i].sold) Console.WriteLine($" | {items[i].price} G");
                 else Console.WriteLine(" | 구매 완료");
             }
-
-            Console.WriteLine("\n0. 나가기");
+            WriteColoredConsole("\n0", ConsoleColor.Red);
+            Console.WriteLine(". 나가기");
 
             int input = CheckInput(0, items.Count);
 
@@ -108,12 +113,14 @@ namespace TextRPG_project
             Console.WriteLine("[아이템 목록]");
             for (int i = 0; i < player.items.Count; i++)
             {
-                Console.Write($"- {i + 1} ");
+                Console.Write("- ");
+                WriteColoredConsole($"{i + 1}", ConsoleColor.Red);
+                Console.Write(". ");
                 player.items[i].ShowItem();
                 Console.WriteLine($" | 판매 가격: {player.items[i].price * 85 / 100} G");
             }
-
-            Console.WriteLine("0. 나가기");
+            WriteColoredConsole("0", ConsoleColor.Red);
+            Console.WriteLine(". 나가기");
 
             int input = CheckInput(0, player.items.Count);
 

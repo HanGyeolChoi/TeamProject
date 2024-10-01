@@ -11,10 +11,15 @@ namespace TextRPG_project
             Console.Clear();
             Console.WriteLine("퀘스트");
             Console.WriteLine();
-            Console.WriteLine("1. 마을을 위협하는 미니언 처치");
-            Console.WriteLine("2. 장비 착용하기");
-            Console.WriteLine("3. 더욱 더 강해지기");
-            Console.WriteLine("0. 나가기");
+            WriteColoredConsole("1", ConsoleColor.Red);
+            Console.WriteLine(". 마을을 위협하는 미니언 처치");
+            WriteColoredConsole("2", ConsoleColor.Red);
+            Console.WriteLine(". 장비 착용하기");
+            WriteColoredConsole("3", ConsoleColor.Red);
+            Console.WriteLine(". 더욱 더 강해지기");
+            Console.WriteLine();
+            WriteColoredConsole("0", ConsoleColor.Red);
+            Console.WriteLine(". 나가기");
             Console.WriteLine();
 
             int input = CheckInput(0, 3);
@@ -87,7 +92,7 @@ namespace TextRPG_project
             //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
             //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
 
-            Console.WriteLine($"- 아무 장비나 착용하기 ({player.questNumber[2]} / 1)\n");
+            Console.WriteLine($"- 레벨 3 달성하기 ({player.questNumber[2]} / 3)\n");
 
             Console.WriteLine("- 보상 -");
             //Console.WriteLine("대충 아이템 이름");

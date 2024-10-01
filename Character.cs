@@ -89,17 +89,26 @@ namespace TextRPG_project
                 Console.WriteLine("상태 보기");
                 Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
 
-                Console.WriteLine($"Level\t: {level}");
+                Console.Write($"Level\t: ");
+                WriteLineColoredConsole($"{level}", ConsoleColor.Red);
                 Console.WriteLine($"이  름\t: {name}");
                 Console.Write($"직  업\t: ");
                 if (class_type == 1) Console.WriteLine("전사");
                 else Console.WriteLine("도적");
-                Console.Write($"공격력\t: {attack} ");
-                if (itemAttack > 0) Console.Write($"( +{itemAttack})");
-                Console.Write($"\n방어력\t: {defence}");
-                if (itemDefence > 0) Console.Write($"( +{itemDefence})");
-                Console.WriteLine($"\n체  력\t: {health}");
-                Console.WriteLine($"Gold\t: {gold}");
+                Console.Write($"공격력\t: ");
+                WriteColoredConsole($"{attack}", ConsoleColor.Red);
+                if (itemAttack > 0) WriteColoredConsole($" (+{itemAttack})", ConsoleColor.Green);
+                Console.Write($"\n방어력\t: ");
+                WriteColoredConsole($"{defence}", ConsoleColor.Red);
+                if (itemDefence > 0) WriteColoredConsole($" (+{itemDefence})", ConsoleColor.Green);
+                Console.Write($"\n체  력\t: ");
+                WriteColoredConsole($"{health}", ConsoleColor.Red);
+                Console.WriteLine($" / {maxHP}");
+                Console.Write($"M   P\t: ");
+                WriteColoredConsole($"{mp}", ConsoleColor.Red);
+                Console.WriteLine($" / {maxMP}");
+                Console.Write($"Gold\t: ");
+                WriteLineColoredConsole($"{gold}", ConsoleColor.Red);
                 Console.WriteLine($"경험치\t: {experience} / {level}");
 
                 Console.WriteLine("\n0. 나가기");
@@ -125,9 +134,10 @@ namespace TextRPG_project
                     items[i].ShowItem();
                     Console.WriteLine();
                 }
-
-                Console.WriteLine("\n1. 장착 관리");
-                Console.WriteLine("0. 나가기");
+                WriteColoredConsole("\n1", ConsoleColor.Red);
+                Console.WriteLine(". 장착 관리");
+                WriteColoredConsole("0", ConsoleColor.Red);
+                Console.WriteLine(". 나가기");
 
                 int input = CheckInput(0, 1);
 
@@ -151,12 +161,13 @@ namespace TextRPG_project
                 Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < items.Count; i++)
                 {
-                    Console.Write($"- {i + 1} ");
+                    WriteColoredConsole($"- {i + 1}", ConsoleColor.Red);
                     if (items[i].equip) Console.Write("[E] ");
                     items[i].ShowItem();
                     Console.WriteLine();
                 }
-                Console.WriteLine("0. 나가기");
+                WriteColoredConsole("0", ConsoleColor.Red);
+                Console.WriteLine(". 나가기");
 
 
                 int input = CheckInput(0, items.Count);
@@ -227,9 +238,17 @@ namespace TextRPG_project
                         break;
                 }
                 Console.WriteLine("[내정보]");
-                Console.WriteLine($"Lv.{level}\t{name}\t직업: {job}");
-                Console.WriteLine($"HP {health}/{maxHP}");
-                Console.WriteLine($"MP {mp}/{maxMP}");
+
+                Console.Write("Lv.");
+                WriteColoredConsole($"{level}", ConsoleColor.Red);
+                Console.WriteLine($"\t이름:{name}  직업: {job}");
+
+                Console.Write($"HP ");
+                WriteColoredConsole($"{health}", ConsoleColor.Red);
+                Console.WriteLine($"/{maxHP}");
+                Console.Write($"MP ");
+                WriteColoredConsole($"{mp}", ConsoleColor.Red);
+                Console.WriteLine($"/{maxMP}");
                 Console.WriteLine();
             }
         }
