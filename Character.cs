@@ -13,8 +13,10 @@ namespace TextRPG_project
             public int class_type;     //전사일 경우 1, 도적일 경우 2
             public int attack;
             public int defence;
+            public int maxHP;
             public int health;
             public int lasthp;
+            public int maxMP;
             public int mp;
             public int gold;
             public int itemAttack;     //아이템으로 올라간 총 공격력
@@ -39,15 +41,18 @@ namespace TextRPG_project
                 {
                     attack = 10;
                     defence = 5;
+                    maxHP = 100;
                 }
                 else
                 {
                     attack = 13;
-                    defence = 4;
+                    defence = 2;
+                    maxHP = 85;
                 }
-                health = 100;
-                lasthp = 100;
-                mp = 50;
+                health = maxHP;
+                lasthp = maxHP;
+                maxMP = 50;
+                mp = maxMP;
                 gold = 1500;
                 
                 items = new List<Item>();
@@ -223,8 +228,8 @@ namespace TextRPG_project
                 }
                 Console.WriteLine("[내정보]");
                 Console.WriteLine($"Lv.{level}\t{name}\t직업: {job}");
-                Console.WriteLine($"HP {health}/100");
-                Console.WriteLine($"MP {mp}/50");
+                Console.WriteLine($"HP {health}/{maxHP}");
+                Console.WriteLine($"MP {mp}/{maxMP}");
                 Console.WriteLine();
             }
         }

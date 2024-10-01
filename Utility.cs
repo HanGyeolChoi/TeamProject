@@ -25,7 +25,7 @@ namespace TextRPG_project
                     return result;
                 }
             }
-            WriteColoredConsole("잘못된 입력입니다.", ConsoleColor.Red);
+            WriteLineColoredConsole("잘못된 입력입니다.", ConsoleColor.Red);
             Thread.Sleep(1000);
             ClearPreviousLines(4);
             return CheckInput(min, max);
@@ -60,12 +60,19 @@ namespace TextRPG_project
         }
 
         // 콘솔 색상 변경하여 출력
-        static void WriteColoredConsole(string input, ConsoleColor color)
+        static void WriteLineColoredConsole(string input, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(input);
             Console.ResetColor();
         }
+        static void WriteColoredConsole(string input, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(input);
+            Console.ResetColor();
+        }
+
         // 플레이 데이터 저장
         static void SaveData(Character player, List<Item> item, List<int> potion)
         {
@@ -94,7 +101,7 @@ namespace TextRPG_project
             File.WriteAllText(itemDataPath, itemJson);
             File.WriteAllText(potionDataPath, potionJson);
 
-            WriteColoredConsole("저장이 완료되었습니다", ConsoleColor.Green);
+            WriteLineColoredConsole("저장이 완료되었습니다", ConsoleColor.Green);
         }
         // 플레이 데이터 로드
         static bool LoadData(ref Character player, List<Item> item, List<int> potion)
@@ -120,19 +127,19 @@ namespace TextRPG_project
                 // json -> data
                 string playerJson = File.ReadAllText(playerDataPath);
                 player = JsonConvert.DeserializeObject<Character>(playerJson);
-                WriteColoredConsole("플레이어 데이터를 불러왔습니다.", ConsoleColor.Green);
-                WriteColoredConsole("인벤토리 데이터를 불러왔습니다.", ConsoleColor.Green);
-                WriteColoredConsole("퀘스트 데이터를 불러왔습니다.", ConsoleColor.Green);
+                WriteLineColoredConsole("플레이어 데이터를 불러왔습니다.", ConsoleColor.Green);
+                WriteLineColoredConsole("인벤토리 데이터를 불러왔습니다.", ConsoleColor.Green);
+                WriteLineColoredConsole("퀘스트 데이터를 불러왔습니다.", ConsoleColor.Green);
 
                 string itemJson = File.ReadAllText(itemDataPath);
                 item.Clear(); // 기존 아이템 삭제
                 item.AddRange(JsonConvert.DeserializeObject<List<Item>>(itemJson)); // json에 저장된 내용으로 새로 쓰기
-                WriteColoredConsole("아이템 데이터를 불러왔습니다.", ConsoleColor.Green);
+                WriteLineColoredConsole("아이템 데이터를 불러왔습니다.", ConsoleColor.Green);
 
                 string potionJson = File.ReadAllText(potionDataPath);
                 potion.Clear(); // 기존 포션 삭제
                 potion.AddRange(JsonConvert.DeserializeObject<List<int>>(potionJson)); // json에 저장된 내용으로 새로 쓰기
-                WriteColoredConsole("포션 데이터를 불러왔습니다.", ConsoleColor.Green);
+                WriteLineColoredConsole("포션 데이터를 불러왔습니다.", ConsoleColor.Green);
 
                 return true;
             }

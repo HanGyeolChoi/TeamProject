@@ -13,11 +13,10 @@ namespace TextRPG_project
     internal partial class Program
     {
         static Character player = new Character();
-        static List<Item> itemList = new List<Item>(6); // 아이템 리스트 초기화;
-        static List<Monster> monsterList = new List<Monster>(3); // 몬스터 리스트 초기화;
+        static List<Item> itemList = new List<Item>(); // 아이템 리스트 초기화;
+        static List<Monster> monsterList = new List<Monster>(); // 몬스터 리스트 초기화;
         static int potionHp = 30;
         static List<int> potionList = new List<int>(3); // 포션 리스트 초기화;
-        public enum DungeonDiff { 쉬운 = 5, 일반 = 11, 어려운 = 17 }
         static bool isDataLoaded = false;
         static string Start()
         {
@@ -128,7 +127,7 @@ namespace TextRPG_project
                 case 0:
                     break;
                 default:
-                    WriteColoredConsole("\n잘못된 입력입니다.", ConsoleColor.Red);
+                    WriteLineColoredConsole("\n잘못된 입력입니다.", ConsoleColor.Red);
                     Thread.Sleep(1000);
                     MainMenu(player);
                     break;
@@ -139,7 +138,7 @@ namespace TextRPG_project
         {
             Console.Clear();
             Console.WriteLine("Battle!! - Result");
-            WriteColoredConsole("\nYou Lose", ConsoleColor.Red);
+            WriteLineColoredConsole("\nYou Lose", ConsoleColor.Red);
             Console.WriteLine($"\nLV{player.level} {player.name}");
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
             //Console.WriteLine("\n0. 처음부터 다시 시작하기");
@@ -164,12 +163,17 @@ namespace TextRPG_project
         {
             Console.Clear();
             Console.WriteLine("Battle!! - Result");
-            WriteColoredConsole("\nYou Win", ConsoleColor.Green);
+            WriteLineColoredConsole("\nYou Win", ConsoleColor.Green);
             Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
             Console.WriteLine($"\nLV{player.level} {player.name}");
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
-            Console.WriteLine($"남은 MP {player.mp} -> {player.mp + 10} (+10)");
+            Console.Write($"남은 MP {player.mp} -> ");
             player.mp += 10;
+            if(player.mp >= player.maxMP)
+            {
+                player.mp = player.maxMP;
+            }
+            Console.WriteLine($"{player.mp}");
             GetPotion();    // 10%의 확률로 포션 획득
             Console.WriteLine("\n0. 돌아가기");
             int input = CheckInput(0, 0);
@@ -184,25 +188,6 @@ namespace TextRPG_project
             }
         }
 
-
-        
-        //static void SaveCharacter(Character character, string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        serializer.Serialize(stream, character);
-        //    }
-        //}
-
-        //static Character LoadCharacter(string filePath)
-        //{
-        //    XmlSerializer serializer = new XmlSerializer(typeof(Character));
-        //    using (FileStream stream = new FileStream(filePath, FileMode.Open))
-        //    {
-        //        return (Character)serializer.Deserialize(stream);
-        //    }
-        //}
 
         static void Main(string[] args)
         {

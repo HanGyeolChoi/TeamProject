@@ -22,7 +22,7 @@ namespace TextRPG_project
                 int numMonster = rand.Next(1, 5); // 몬스터 1~4마리중 랜덤
                 for (int i = 0; i < numMonster; i++)
                 {
-                    int monsterType = rand.Next(0, 3); // 몬스터 타입 1,2,3중 랜덤
+                    int monsterType = rand.Next(0, monsterList.Count); // 몬스터 타입 중 랜덤
                     Monster monster = new Monster(monsterList[monsterType]);
                     monsters.Add(monster);
                 }
@@ -34,7 +34,7 @@ namespace TextRPG_project
                     if (!monsters[i].IsDead())
                         Console.WriteLine($"Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     else
-                        WriteColoredConsole($"Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
+                        WriteLineColoredConsole($"Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
                 }
                 Console.WriteLine();
                 Console.WriteLine();
@@ -47,7 +47,7 @@ namespace TextRPG_project
                     if (!monsters[i].IsDead())
                         Console.WriteLine($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     else
-                        WriteColoredConsole($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
+                        WriteLineColoredConsole($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
                 }
                 Console.WriteLine();
                 Console.WriteLine();
@@ -61,13 +61,14 @@ namespace TextRPG_project
                     if (monsters[i].health > 0)
                     {
                         Console.Clear();
+                        int damage = (int)(monsters[i].attack * 10 / (10 + player.defence));
                         Console.WriteLine("Battle!!\n");
                         Console.WriteLine($"Lv. {monsters[i].level} {monsters[i].name}의 공격!");
-                        Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monsters[i].attack}]");
+                        Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {damage}]");
                         Console.WriteLine();
                         Console.WriteLine($"Lv. {player.level} {player.name}");
-                        Console.WriteLine($"HP {player.health} -> {MathF.Max(0, player.health - monsters[i].attack)}");
-                        player.health -= monsters[i].attack;
+                        Console.WriteLine($"HP {player.health} -> {MathF.Max(0, player.health - damage)}");
+                        player.health -= damage;
 
                         Console.WriteLine();
                         Console.WriteLine("0. 다음");
@@ -146,9 +147,7 @@ namespace TextRPG_project
                 player.PrintSimpleStats();
                 Console.WriteLine();
                 
-                int attackDamage;
                 Random rand = new Random();
-                Monster monster;
 
                 //if (player.class_type == 1)                     // 전사일 경우
                 //{
@@ -220,7 +219,7 @@ namespace TextRPG_project
                                 liveMonsters.Remove(liveMonsters[rand.Next(0, liveMonsters.Count)]);    // 2마리가 남을때까지 제외시킴
                             }
                             player.mp -= 15;
-                            AttackResult(player, (int)(player.attack * 1.5f), liveMonsters);
+                            AttackResult(player, (int)(player.attack * 1.5f), liveMonsters, 2);
                         }
 
                         else
@@ -234,7 +233,7 @@ namespace TextRPG_project
             }
 
 
-            void AttackResult(Character player, int damage, List<Monster> attackedmonsters)
+            void AttackResult(Character player, int damage, List<Monster> attackedmonsters, int attackOrSkill)
             {
                 Console.Clear();
                 Random rand = new Random();
@@ -251,7 +250,7 @@ namespace TextRPG_project
                     if (critical < 4) isCrit = true;             // 치명타 확률계산
                     bool isEvade = false;
                     int evasion = rand.Next(1, 11);
-                    if (evasion == 1) isEvade = true;
+                    if (evasion == 1 && attackOrSkill == 1) isEvade = true;
                     int attackDamage;
                     if (isEvade)
                     {
@@ -316,7 +315,7 @@ namespace TextRPG_project
                         {
                             monster
                         };
-                        AttackResult(player, attackDamage, attackedmonsters);
+                        AttackResult(player, attackDamage, attackedmonsters, attackOrSkill);
                     }
                 }
             }

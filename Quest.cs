@@ -103,7 +103,7 @@ namespace TextRPG_project
 
             if (player.questCleared[questNum] == true)      // 퀘스트를 이미 클리어 한 상태
             {
-                WriteColoredConsole("\n이미 이 퀘스트를 클리어 하였습니다.", ConsoleColor.Red);
+                WriteLineColoredConsole("\n이미 이 퀘스트를 클리어 하였습니다.", ConsoleColor.Red);
                 Thread.Sleep(1000);
             }
             else
