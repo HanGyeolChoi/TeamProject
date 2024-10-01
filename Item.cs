@@ -2,6 +2,8 @@
 //using System.Xml.Linq;
 //using System.Xml.Serialization;
 
+using System.Text.Json.Serialization;
+
 namespace TextRPG_project
 {
     internal partial class Program

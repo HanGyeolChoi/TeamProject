@@ -66,7 +66,7 @@ namespace TextRPG_project
             Console.WriteLine(input);
             Console.ResetColor();
         }
-
+        // 플레이 데이터 저장
         static void SaveData(Character player, List<Item> item, List<int> potion)
         {
             // 저장할 json 파일의 이름 지정
@@ -75,7 +75,9 @@ namespace TextRPG_project
             string potionDataFileName = "PotionData.json";
 
             // 데이터 경로 저장 (중단점 이용하여 경로 확인하기)
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string folderName = "../../../PlayData";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalizedResources);
+            path = Path.Combine(path, folderName);
 
             // /(데이터 저장되는 폴더 + 파일 이름)으로 경로명 설정
             string playerDataPath = Path.Combine(path, playerDataFileName);
@@ -94,7 +96,7 @@ namespace TextRPG_project
 
             WriteColoredConsole("저장이 완료되었습니다", ConsoleColor.Green);
         }
-
+        // 플레이 데이터 로드
         static bool LoadData(ref Character player, List<Item> item, List<int> potion)
         {
             // 불러올 json 파일의 이름 지정
@@ -103,7 +105,9 @@ namespace TextRPG_project
             string potionDataFileName = "PotionData.json";
 
             // 데이터 경로 저장 (중단점 이용하여 경로 확인하기)
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string folderName = "../../../PlayData";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalizedResources);
+            path = Path.Combine(path, folderName);
 
             // /(데이터 저장되는 폴더 + 파일 이름)으로 경로명 설정
             string playerDataPath = Path.Combine(path, playerDataFileName);
@@ -126,7 +130,7 @@ namespace TextRPG_project
                 WriteColoredConsole("아이템 데이터를 불러왔습니다.", ConsoleColor.Green);
 
                 string potionJson = File.ReadAllText(potionDataPath);
-                potion.Clear(); // 기존 아이템 삭제
+                potion.Clear(); // 기존 포션 삭제
                 potion.AddRange(JsonConvert.DeserializeObject<List<int>>(potionJson)); // json에 저장된 내용으로 새로 쓰기
                 WriteColoredConsole("포션 데이터를 불러왔습니다.", ConsoleColor.Green);
 
