@@ -132,7 +132,7 @@ namespace TextRPG_project
                 }
                 else    // 퀘스트 이미 수락한 상태
                 {
-                    if (player.questNumber[1] < questRequired)  //퀘스트 완료 조건 못채움
+                    if (player.questNumber[questNum] < questRequired)  //퀘스트 완료 조건 못채움
                     {
                         Console.WriteLine("1. 확인");
                         int input = CheckInput(1, 1);
