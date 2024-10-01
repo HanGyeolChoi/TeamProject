@@ -10,21 +10,26 @@ namespace TextRPG_project
         {
             public int level;
             public string name;
-            private int class_type;     //전사일 경우 1, 도적일 경우 2
+            public int class_type;     //전사일 경우 1, 도적일 경우 2
             public int attack;
             public int defence;
             public int health;
             public int lasthp;
+            public int mp;
             public int gold;
-            private int itemAttack;     //아이템으로 올라간 총 공격력
-            private int itemDefence;    //아이템으로 올라간 총 방어력
+            public int itemAttack;     //아이템으로 올라간 총 공격력
+            public int itemDefence;    //아이템으로 올라간 총 방어력
             public int experience;      //경험치
             public List<Item> items;   // 인벤토리의 아이템
-            private Item? equippedArmor;
-            private Item? equippedWeapon;
+            public Item? equippedArmor;
+            public Item? equippedWeapon;
             public bool[] acceptQuest;  //퀘스트 수락 여부
             public int[] questNumber;   //각 퀘스트 진행상황
             public bool[] questCleared; //퀘스트 클리어 여부
+            public Character()
+            {
+
+            }
             public Character(string _name, int class_num)
             {
                 level = 1;
@@ -42,7 +47,9 @@ namespace TextRPG_project
                 }
                 health = 100;
                 lasthp = 100;
+                mp = 50;
                 gold = 1500;
+                
                 items = new List<Item>();
                 //exp = 0;
                 //itemAttack = 0;
@@ -217,6 +224,7 @@ namespace TextRPG_project
                 Console.WriteLine("[내정보]");
                 Console.WriteLine($"Lv.{level}\t{name}\t직업: {job}");
                 Console.WriteLine($"HP {health}/100");
+                Console.WriteLine($"MP {mp}/50");
                 Console.WriteLine();
             }
         }
