@@ -27,8 +27,10 @@ namespace TextRPG_project
             public int maxexp;
             public int lastexp;
             public List<Item> items;   // 인벤토리의 아이템
-            public Item? equippedArmor;
-            public Item? equippedWeapon;
+            public int equippedArmorNumber;     //장착한 방어구의 index (items 에서)
+            public int equippedWeaponNumber;    //장착한 무기의 index
+            //public Item? equippedArmor;
+            //public Item? equippedWeapon;
             public bool[] acceptQuest;  //퀘스트 수락 여부
             public int[] questNumber;   //각 퀘스트 진행상황
             public bool[] questCleared; //퀘스트 클리어 여부
@@ -67,8 +69,8 @@ namespace TextRPG_project
                 lastexp = 0;
                 //itemAttack = 0;
                 //itemDefence = 0;      //자동으로 0으로 초기화됨
-                equippedArmor = null;
-                equippedWeapon = null;
+                equippedArmorNumber = -1;
+                equippedWeaponNumber = -1;
                 acceptQuest = new bool[3];
                 questNumber = new int[3];
                 questCleared = new bool[3];
@@ -117,8 +119,9 @@ namespace TextRPG_project
                 Console.WriteLine($" / {maxMP}");
                 Console.Write($"Gold\t: ");
                 WriteLineColoredConsole($"{gold}", ConsoleColor.Red);
-                Console.WriteLine($"경험치\t: {experience} / {maxexp}");
-
+                Console.Write("경험치\t: ");
+                WriteColoredConsole($"{experience} ", ConsoleColor.Red);
+                Console.WriteLine($"/ {maxexp}");
                 WriteColoredConsole("\n0", ConsoleColor.Red);
                 Console.WriteLine(". 나가기");
                 int input = CheckInput(0, 0);
@@ -170,6 +173,7 @@ namespace TextRPG_project
                 Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < items.Count; i++)
                 {
+
                     Console.Write("-");
                     WriteColoredConsole($" {i + 1}", ConsoleColor.Red);
                     Console.Write(". ");
@@ -203,17 +207,17 @@ namespace TextRPG_project
 
                 if (item.itemType == 1)
                 {
-                    if (equippedArmor != null) Unequip(equippedArmor);
+                    if (equippedArmorNumber != -1) Unequip(items[equippedArmorNumber]);
                     defence += item.stat;
                     itemDefence += item.stat;
-                    equippedArmor = item;
+                    equippedArmorNumber = items.IndexOf(item);
                 }
                 else
                 {
-                    if (equippedWeapon != null) Unequip(equippedWeapon);
+                    if (equippedWeaponNumber != -1) Unequip(items[equippedWeaponNumber]);
                     attack += item.stat;
                     itemAttack += item.stat;
-                    equippedWeapon = item;
+                    equippedWeaponNumber = items.IndexOf(item);
                 }
                 item.equip = true;
                 questNumber[1] = 1;
@@ -225,16 +229,16 @@ namespace TextRPG_project
                 {
                     defence -= item.stat;
                     itemDefence -= item.stat;
-                    equippedArmor = null;
+                    equippedArmorNumber = -1;
                 }
                 else
                 {
                     attack -= item.stat;
                     itemAttack -= item.stat;
-                    equippedWeapon = null;
+                    equippedWeaponNumber = -1;
                 }
                 item.equip = false;
-                if (equippedArmor == null && equippedWeapon == null) questNumber[1] = 0;
+                if (equippedArmorNumber == -1 && equippedWeaponNumber == -1) questNumber[1] = 0;
             }
 
             public void PrintSimpleStats()
