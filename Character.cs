@@ -119,7 +119,8 @@ namespace TextRPG_project
                 WriteLineColoredConsole($"{gold}", ConsoleColor.Red);
                 Console.WriteLine($"경험치\t: {experience} / {maxexp}");
 
-                Console.WriteLine("\n0. 나가기");
+                WriteColoredConsole("\n0", ConsoleColor.Red);
+                Console.WriteLine(". 나가기");
                 int input = CheckInput(0, 0);
 
                 if (input == 0)
@@ -287,7 +288,7 @@ namespace TextRPG_project
                     experience -= maxexp;
                     maxexp = FullExp();
                     defence += 1;
-                    attack += 1;
+                    attack += (level+1)%2;
                     Console.WriteLine($"\nLV.{lastlevel} {name} -> LV.{level} {name}");
                 }
                 else
