@@ -50,6 +50,7 @@ namespace TextRPG_project
                     return Start();
                 }
             }
+
             Console.WriteLine("원하시는 이름을 선택해주세요.\n");
             
             string name = Console.ReadLine();

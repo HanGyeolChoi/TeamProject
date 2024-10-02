@@ -58,7 +58,7 @@ namespace TextRPG_project
 
             Console.WriteLine("- 보상 -");
             //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
+            Console.WriteLine("500G\n");
             CheckQuest(player, 0);
         }
 
@@ -76,8 +76,7 @@ namespace TextRPG_project
             Console.WriteLine($"- 아무 장비나 착용하기 ({player.questNumber[1]} / 1)\n");
 
             Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
+            Console.WriteLine("300G\n");
             CheckQuest(player, 1);
         }
 
@@ -95,8 +94,7 @@ namespace TextRPG_project
             Console.WriteLine($"- 레벨 3 달성하기 ({player.level} / 3)\n");
 
             Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
-            Console.WriteLine("100G\n");
+            Console.WriteLine("1000G\n");
             CheckQuest(player, 2);
 
         }
@@ -172,7 +170,20 @@ namespace TextRPG_project
                         {
                             case 1:         // 퀘스트 클리어 보상 받기         -> 추후 퀘스트 보상 정할때 고칠 필요 있음
                                 player.acceptQuest[questNum] = false;
-                                player.gold += 100;
+                                switch (questNum)
+                                {
+                                    case 0:
+                                        player.gold += 500;
+                                        break;
+                                    case 1:
+                                        player.gold += 300;
+                                        break;
+                                    case 2:
+                                        player.gold += 1000;
+                                        break;
+                                }
+                                    
+                        
                                 //Item item = new Item(이름, 타입, 수치, 가격);
                                 //player.items.Add(item);
                                 player.questCleared[questNum] = true;

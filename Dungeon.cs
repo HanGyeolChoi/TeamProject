@@ -66,7 +66,9 @@ namespace TextRPG_project
                         int damage = (int)(monsters[i].attack * 10 / (10 + player.defence));
                         Console.WriteLine("Battle!!\n");
                         Console.WriteLine($"Lv. {monsters[i].level} {monsters[i].name}의 공격!");
-                        Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {damage}]");
+                        Console.Write($"{player.name} 을(를) 맞췄습니다. [데미지 : ");
+                        WriteColoredConsole($"{damage}", ConsoleColor.Red);
+                        Console.WriteLine("]");
                         Console.WriteLine();
                         Console.WriteLine($"Lv. {player.level} {player.name}");
                         Console.WriteLine($"HP {player.health} -> {MathF.Max(0, player.health - damage)}");
@@ -270,7 +272,10 @@ namespace TextRPG_project
                         int errorRange = (damage + 9) / 10;   // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
                         attackDamage = rand.Next(damage - errorRange, damage + errorRange + 1);
                         if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
-                        Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : {attackDamage}]");
+                        Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : ");
+                        WriteColoredConsole($"{attackDamage}", ConsoleColor.Red);
+                        Console.Write("]");
+
                         if (isCrit) Console.Write(" - 치명타 공격!!");
                         Console.WriteLine();
                         Console.WriteLine();
@@ -278,7 +283,7 @@ namespace TextRPG_project
                         Console.Write($"HP {monster.health} -> ");
                         if (monster.health - attackDamage <= 0)
                         {
-                            Console.WriteLine("Dead");
+                            WriteLineColoredConsole("Dead", ConsoleColor.DarkGray);
                             DeadCount++;
                             player.experience += monster.level;
                             player.gold += monster.level * 100;

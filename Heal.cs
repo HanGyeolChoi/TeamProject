@@ -33,9 +33,9 @@ namespace TextRPG_project
             int input = CheckInput(0, 2);
 
             // 풀피인데 회복하려고 시도하는 경우
-            if ((input == 1 || input == 2) && player.health >= player.maxHP)
+            if ((input == 1 || input == 2) && player.health >= player.maxHP && player.mp >= player.maxMP)
             {
-                WriteLineColoredConsole("체력이 충분합니다. 회복할 필요가 없습니다.", ConsoleColor.Red);
+                WriteLineColoredConsole("체력과 마나가 충분합니다. 회복할 필요가 없습니다.", ConsoleColor.Red);
                 Thread.Sleep(1000);
                 Rest(player);
             }
