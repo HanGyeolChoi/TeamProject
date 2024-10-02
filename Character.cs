@@ -275,15 +275,14 @@ namespace TextRPG_project
                         return 0;
                 }
             }
-            public void LevelUp(int GiveExp)
+            public void LevelUp()
             {
-                int temp;
-                experience += GiveExp;
+
                 if (experience >= maxexp)
                 {
                     Console.WriteLine("레벨업!");
                     level++;
-                    temp = experience - maxexp;
+                    experience -= maxexp;
                     maxexp = FullExp();
                     defence += 1;
                     attack += 1;

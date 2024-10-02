@@ -207,7 +207,7 @@ namespace TextRPG_project
             Console.WriteLine("Battle!! - Result");
             WriteLineColoredConsole("\nYou Win", ConsoleColor.Green);
             Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
-            player.LevelUp(player.experience);
+            player.LevelUp();
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
             Console.Write($"남은 MP {player.mp} -> ");
             player.mp += 10;
