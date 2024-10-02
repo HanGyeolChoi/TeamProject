@@ -92,7 +92,7 @@ namespace TextRPG_project
             //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
             //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
 
-            Console.WriteLine($"- 레벨 3 달성하기 ({player.questNumber[2]} / 3)\n");
+            Console.WriteLine($"- 레벨 3 달성하기 ({player.level} / 3)\n");
 
             Console.WriteLine("- 보상 -");
             //Console.WriteLine("대충 아이템 이름");
@@ -102,9 +102,19 @@ namespace TextRPG_project
         }
         static void CheckQuest(Character player, int questNum)
         {
-            int questRequired;
-            if (questNum == 0) questRequired = 5;
-            else questRequired = 1;
+            int questRequired = 0;
+            switch (questNum)
+            {
+                case 0:
+                    questRequired = 5;
+                    break;
+                case 1:
+                    questRequired = 1;
+                    break;
+                case 2:
+                    questRequired = 3;
+                    break;
+            }
 
             if (player.questCleared[questNum] == true)      // 퀘스트를 이미 클리어 한 상태
             {
