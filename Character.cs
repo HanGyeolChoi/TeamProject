@@ -117,7 +117,7 @@ namespace TextRPG_project
                 Console.WriteLine($" / {maxMP}");
                 Console.Write($"Gold\t: ");
                 WriteLineColoredConsole($"{gold}", ConsoleColor.Red);
-                Console.WriteLine($"경험치\t: {experience} / {level}");
+                Console.WriteLine($"경험치\t: {experience} / {maxexp}");
 
                 Console.WriteLine("\n0. 나가기");
                 int input = CheckInput(0, 0);
@@ -169,11 +169,14 @@ namespace TextRPG_project
                 Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < items.Count; i++)
                 {
-                    WriteColoredConsole($"- {i + 1}", ConsoleColor.Red);
+                    Console.Write("-");
+                    WriteColoredConsole($" {i + 1}", ConsoleColor.Red);
+                    Console.Write(". ");
                     if (items[i].equip) Console.Write("[E] ");
                     items[i].ShowItem();
                     Console.WriteLine();
                 }
+                Console.WriteLine();
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 나가기");
 
@@ -280,7 +283,7 @@ namespace TextRPG_project
 
                 if (experience >= maxexp)
                 {
-                    Console.WriteLine("레벨업!");
+                    WriteLineColoredConsole("레벨업!", ConsoleColor.Blue);
                     level++;
                     experience -= maxexp;
                     maxexp = FullExp();

@@ -11,13 +11,16 @@ namespace TextRPG_project
             Console.Clear();
             Console.WriteLine("체력 회복하기");
             WriteColoredConsole("500", ConsoleColor.Red);
-            Console.Write($" G 를 내어 휴식하면 체력을 40 회복할 수 있습니다. 보유 골드: ");
+            Console.Write($" G 를 내어 휴식하면 체력을 40, 마나를 10 회복할 수 있습니다. 보유 골드: ");
             WriteColoredConsole($"{player.gold}", ConsoleColor.Red);
             Console.WriteLine(" G");
             Console.WriteLine($"포션을 사용하면 체력을 {potionHp} 회복할 수 있습니다. (남은 포션 : {potionList.Count} )");
             Console.Write($"현재 체력: ");
             WriteColoredConsole($"{player.health}", ConsoleColor.Red);
             Console.WriteLine($" / {player.maxHP}\n");
+            Console.Write($"현재 마나: ");
+            WriteColoredConsole($"{player.mp}", ConsoleColor.Red);
+            Console.WriteLine($" / {player.maxMP}\n");
 
             WriteColoredConsole("1", ConsoleColor.Red);
             Console.WriteLine(". 휴식 하기");
@@ -36,43 +39,47 @@ namespace TextRPG_project
                 Thread.Sleep(1000);
                 Rest(player);
             }
-
-            switch (input)
+            else
             {
-                case 0: // 나가기
-                    MainMenu(player);
-                    break;
-                case 1: // 휴식하기
-                    if (player.gold >= 500)
-                    {
-                        player.gold -= 500;
-                        player.health += 40;
-                        if (player.health >= player.maxHP) player.health = player.maxHP;
-                        WriteLineColoredConsole("휴식을 완료했습니다.", ConsoleColor.Blue);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    else
-                    {
-                        WriteLineColoredConsole("Gold 가 부족합니다.", ConsoleColor.Red);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    break;
-                case 2: // 포션 사용하기
-                    if (potionList.Count > 0)
-                    {
-                        UsePotion(player);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    else
-                    {
-                        WriteLineColoredConsole("포션이 부족합니다.", ConsoleColor.Red);
-                        Thread.Sleep(1000);
-                        Rest(player);
-                    }
-                    break;
+                switch (input)
+                {
+                    case 0: // 나가기
+                        MainMenu(player);
+                        break;
+                    case 1: // 휴식하기
+                        if (player.gold >= 500)
+                        {
+                            player.gold -= 500;
+                            player.health += 40;
+                            player.mp += 10;
+                            if (player.health >= player.maxHP) player.health = player.maxHP;
+                            if (player.mp >= player.maxMP) player.mp = player.maxMP;
+                            WriteLineColoredConsole("휴식을 완료했습니다.", ConsoleColor.Blue);
+                            Thread.Sleep(1000);
+                            Rest(player);
+                        }
+                        else
+                        {
+                            WriteLineColoredConsole("Gold 가 부족합니다.", ConsoleColor.Red);
+                            Thread.Sleep(1000);
+                            Rest(player);
+                        }
+                        break;
+                    case 2: // 포션 사용하기
+                        if (potionList.Count > 0)
+                        {
+                            UsePotion(player);
+                            Thread.Sleep(1000);
+                            Rest(player);
+                        }
+                        else
+                        {
+                            WriteLineColoredConsole("포션이 부족합니다.", ConsoleColor.Red);
+                            Thread.Sleep(1000);
+                            Rest(player);
+                        }
+                        break;
+                }
             }
         }
         static void GetPotion()
@@ -83,7 +90,7 @@ namespace TextRPG_project
             if (randNum < 10)
             {
                 potionList.Add(potionHp);
-                Console.WriteLine("포션");
+                WriteLineColoredConsole("포션을 획득했습니다!", ConsoleColor.Blue);
             }
         }
         static void UsePotion(Character player)

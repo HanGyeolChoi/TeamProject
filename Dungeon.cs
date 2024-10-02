@@ -77,17 +77,7 @@ namespace TextRPG_project
                         Console.WriteLine(". 다음");
                         input = CheckInput(0, 0);
                     }
-                    //if (monsters[i].health <= 0)
-                    //{
-                    //    DeadCount++;
-                    //    monsters[i].dead = true;
 
-                    //    if (DeadCount == monsters.Count)
-                    //    {
-                    //        Clear = true;
-                    //    }
-
-                    //}
                     if (player.health <= 0)
                     {
                         player.health = 0;
@@ -114,7 +104,7 @@ namespace TextRPG_project
                 WriteColoredConsole("3", ConsoleColor.Red);
                 Console.WriteLine(". 포션 사용");
                 Console.WriteLine();
-                int input = CheckInput(1, 2);
+                int input = CheckInput(1, 3);
 
                 switch (input)
                 {
@@ -123,6 +113,11 @@ namespace TextRPG_project
                         break;
                     case 2:
                         Skill(player);
+                        break;
+                    case 3:
+                        UsePotion(player);
+                        Thread.Sleep(1000);
+                        EnterDungeon(player);
                         break;
                     default:
                         Console.WriteLine("잘못된 입력입니다.- EnterDungeon() 함수 내");
