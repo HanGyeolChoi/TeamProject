@@ -9,6 +9,7 @@ namespace TextRPG_project
         public class Character
         {
             public int level;
+            public int lastlevel;
             public string name;
             public int class_type;     //전사일 경우 1, 도적일 경우 2
             public int attack;
@@ -19,9 +20,12 @@ namespace TextRPG_project
             public int maxMP;
             public int mp;
             public int gold;
+            public int lastgold;
             public int itemAttack;     //아이템으로 올라간 총 공격력
             public int itemDefence;    //아이템으로 올라간 총 방어력
             public int experience;      //경험치
+            public int maxexp;
+            public int lastexp;
             public List<Item> items;   // 인벤토리의 아이템
             public Item? equippedArmor;
             public Item? equippedWeapon;
@@ -35,6 +39,7 @@ namespace TextRPG_project
             public Character(string _name, int class_num)
             {
                 level = 1;
+                lastlevel = 1;
                 name = _name;
                 class_type = class_num;
                 if (class_num == 1)
@@ -54,9 +59,12 @@ namespace TextRPG_project
                 maxMP = 50;
                 mp = maxMP;
                 gold = 1500;
+                lastgold = 1500;
                 
                 items = new List<Item>();
-                //exp = 0;
+                experience = 0;
+                maxexp = FullExp();
+                lastexp = 0;
                 //itemAttack = 0;
                 //itemDefence = 0;      //자동으로 0으로 초기화됨
                 equippedArmor = null;
@@ -251,6 +259,42 @@ namespace TextRPG_project
                 Console.WriteLine($"/{maxMP}");
                 Console.WriteLine();
             }
+            public int FullExp()
+            {
+                switch (level)
+                {
+                    case 1:
+                        return 10;
+                    case 2:
+                        return 35;
+                    case 3:
+                        return 65;
+                    case 4:
+                        return 100;
+                    default:
+                        return 0;
+                }
+            }
+            public void LevelUp(int GiveExp)
+            {
+                int temp;
+                experience += GiveExp;
+                if (experience >= maxexp)
+                {
+                    Console.WriteLine("레벨업!");
+                    level++;
+                    temp = experience - maxexp;
+                    maxexp = FullExp();
+                    defence += 1;
+                    attack += 1;
+                    Console.WriteLine($"\nLV.{lastlevel} {name} -> LV.{level} {name}");
+                }
+                else
+                {
+                    Console.WriteLine($"\nLv.{level} {name}");
+                }
+            }
         }
+
     }
 }

@@ -152,6 +152,9 @@ namespace TextRPG_project
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
                     player.lasthp = player.health;
+                    player.lastexp = player.experience;
+                    player.lastlevel = player.level;
+                    player.lastgold = player.gold;
                     dungeon.EnterDungeon(player);
                     dungeon.DeadCount = 0;
                     break;
@@ -204,7 +207,7 @@ namespace TextRPG_project
             Console.WriteLine("Battle!! - Result");
             WriteLineColoredConsole("\nYou Win", ConsoleColor.Green);
             Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
-            Console.WriteLine($"\nLV{player.level} {player.name}");
+            player.LevelUp(player.experience);
             Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
             Console.Write($"남은 MP {player.mp} -> ");
             player.mp += 10;
@@ -213,6 +216,8 @@ namespace TextRPG_project
                 player.mp = player.maxMP;
             }
             Console.WriteLine($"{player.mp}");
+            Console.WriteLine("\n획득 아이템");
+            Console.WriteLine($"Gold {player.lastgold} -> {player.gold}");
             GetPotion();    // 10%의 확률로 포션 획득
             Console.WriteLine("\n0. 돌아가기");
             int input = CheckInput(0, 0);

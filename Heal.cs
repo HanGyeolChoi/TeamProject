@@ -83,6 +83,7 @@ namespace TextRPG_project
             if (randNum < 10)
             {
                 potionList.Add(potionHp);
+                Console.WriteLine("포션");
             }
         }
         static void UsePotion(Character player)

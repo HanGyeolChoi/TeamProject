@@ -285,6 +285,8 @@ namespace TextRPG_project
                         {
                             Console.WriteLine("Dead");
                             DeadCount++;
+                            player.experience += monster.level;
+                            player.gold += monster.level * 100;
                         }
                         else Console.WriteLine($"{monster.health - attackDamage}");
                     }
