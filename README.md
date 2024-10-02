@@ -14,7 +14,7 @@
 
 # 3. 와이어프레임
 
-![image](https://github.com/user-attachments/assets/75fbe4a8-0aca-40d7-9e5e-0844ea57a1a2)
+![image](https://github.com/user-attachments/assets/d3ed2805-bff0-40ad-8de4-6e2940857e12)
 https://www.figma.com/board/1qqi9aCDmfZYrx3kmEyVKw/Project_Wireframe?t=DxGkuoCXl3YkAgF5-6
 
 # 4. 클래스별 기능
