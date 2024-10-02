@@ -280,7 +280,6 @@ namespace TextRPG_project
             }
             public void LevelUp()
             {
-
                 if (experience >= maxexp)
                 {
                     WriteLineColoredConsole("레벨업!", ConsoleColor.Blue);
@@ -295,6 +294,7 @@ namespace TextRPG_project
                 {
                     Console.WriteLine($"\nLv.{level} {name}");
                 }
+                questNumber[2] = level;
             }
         }
 
