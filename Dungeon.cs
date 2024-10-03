@@ -94,7 +94,7 @@ namespace TextRPG_project
                         Skill(player);
                         break;
                     case 3:
-                        UsePotion(player);
+                        heal.UsePotion(player);
                         Thread.Sleep(1000);
                         EnterDungeon(player);
                         break;
