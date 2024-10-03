@@ -191,10 +191,14 @@ namespace TextRPG_project
             ClassType class_type;
 
             name = Start();
+
+            LoadSkillData(ref skillList);   // 스킬 데이터 파일 로드해 세팅
+
             if (!isDataLoaded)
             {
                 // json 파일에서 정보 받아와서 직업에 따른 플레이어 데이터 세팅
                 Dictionary<string, Dictionary<string, int>> classData = new Dictionary<string, Dictionary<string, int>>();
+
                 LoadClassData(ref classData);
                 class_type = SelectClass();
                 player = new Character(name, class_type, classData); // player class 초기화
@@ -211,10 +215,6 @@ namespace TextRPG_project
                 for (int i = 0; i < 3; i++)
                     potionList.Add(potionHp);
             }
-            // 스킬 데이터 추가, 0번은 기본 공격. 이름, 데미지 배수, 필요한 마나, 스킬 설명, 랜덤타겟 true or false, 타겟 수 순서.
-            skillList.Add(new Skill("기본 공격", 1, 0, "기본 공격 입니다.", false, 1));
-            skillList.Add(new Skill("알파 스트라이크", 2, 10, "공격력 * 2 로 하나의 적을 공격합니다.", false, 1));
-            skillList.Add(new Skill("더블 스트라이크", 1.5f, 15, "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다..", true, 2));
             // 몬스터 데이터 추가. 이름, 몬스터 레벨, 몬스터 체력, 몬스터 공격력 순서 
             monsterList.Add(new Monster("미니언", 2, 15, 5));
             monsterList.Add(new Monster("공허충", 3, 10, 9));

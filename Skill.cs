@@ -19,6 +19,8 @@ namespace TextRPG_project
             public bool randomTarget;   // 랜덤타겟인지 아닌지
             public int targetNumber;    // 맞는 마리 수
 
+            public Skill() { }
+
             public Skill(string  name, float damageMultiplier, int needMP, string explaination, bool randomTarget, int targetNumber)
             {
                 this.name = name;
@@ -68,9 +70,6 @@ namespace TextRPG_project
                         player.mp -= needMP;
                         dungeon.AttackResult(player, (int)(player.attack * damageMultiplier), liveMonsters, false);
                     }
-
-                    
-
                 }
                 else    // 타겟을 직접 정하는 스킬
                 {
