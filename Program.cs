@@ -68,25 +68,33 @@ namespace TextRPG_project
             }
         }
 
-        static int SelectClass()
+        static ClassType SelectClass()
         {
             ConsoleUI.ShowSelectClass();  // 직업 선택하는 콘솔 출력
-            int class_type = CheckInput(1, 2);
+            ClassType classType = ClassType.None;
+            int input1 = CheckInput(1, 2);
 
-            if (class_type == 1) Console.WriteLine("\n고른 직업은 전사입니다.\n");
-            else if (class_type == 2) Console.WriteLine("\n고른 직업은 도적 입니다.\n");
+            if (input1 == 1)
+            {
+                Console.WriteLine("\n고른 직업은 전사입니다.\n");
+                classType = ClassType.Warrior;
+            }
+            else if (input1 == 2)
+            {
+                Console.WriteLine("\n고른 직업은 도적 입니다.\n");
+                classType = ClassType.Rogue;
+            }
 
             ConsoleUI.ShowSelectSaveData();   // 설정한 직업을 저장할지 선택하는 콘솔 출력
-            int input = CheckInput(1, 2);
-            if (input == 1)
+            int input2 = CheckInput(1, 2);
+            if (input2 == 1)
             {
-                return class_type;
+                return classType;
             }
             else
             {
                 return SelectClass();
             }
-
         }
         static void MainMenu(Character player)
         {
@@ -178,14 +186,16 @@ namespace TextRPG_project
         static void Main(string[] args)
         {
             string name;
-            int class_type;
+            ClassType class_type;
 
             name = Start();
             if (!isDataLoaded)
             {
+                // json 파일에서 정보 받아와서 직업에 따른 플레이어 데이터 세팅
+                Dictionary<string, Dictionary<string, int>> classData = new Dictionary<string, Dictionary<string, int>>();
+                LoadClassData(ref classData);
                 class_type = SelectClass();
-
-                player = new Character(name, class_type); // player class 초기화
+                player = new Character(name, class_type, classData); // player class 초기화
 
                 // 아이템 데이터 추가
                 itemList.Add(new Item("수련자 갑옷", 1, 5, "수련에 도움을 주는 갑옷입니다.", 1000));

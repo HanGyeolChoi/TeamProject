@@ -164,5 +164,33 @@ namespace TextRPG_project
                 return false;
             }
         }
+        // 직업별 능력치 데이터 로드
+        static void LoadClassData(ref Dictionary<string, Dictionary<string, int>> classData)
+        {
+            // 불러올 json 파일의 이름 지정
+            string classDataFileName = "ClassData.json";
+
+            // 데이터 경로 저장 (중단점 이용하여 경로 확인하기)
+            string folderName = "..\\..\\..\\PlayData";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalizedResources);
+            path = Path.Combine(path, folderName);
+
+            // /(데이터 저장되는 폴더 + 파일 이름)으로 경로명 설정
+            string classDataPath = Path.Combine(path, classDataFileName);
+
+            if (File.Exists(classDataPath)) // json 파일이 존재
+            {
+                // 파일 내용(json형태) 불러오고 역직렬화
+                // json -> data
+                string classJson = File.ReadAllText(classDataPath);
+                classData = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(classJson);
+                WriteLineColoredConsole("직업별 능력치 데이터를 불러왔습니다.", ConsoleColor.Green);
+            }
+            else // json 파일 없음
+            {
+                Console.WriteLine("저장된 데이터가 없습니다.");
+            }
+        }
+
     }
 }
