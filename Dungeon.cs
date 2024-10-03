@@ -44,12 +44,13 @@ namespace TextRPG_project
             {
                 for (int i = 0; i < monsters.Count; i++)
                 {
-                    if (!monsters[i].IsDead()) {
+                    if (!monsters[i].IsDead())
+                    {
                         WriteColoredConsole($"{i+1}.", ConsoleColor.Red);
                         Console.WriteLine($" Lv. {monsters[i].level}\t{monsters[i].name}  \tHP {monsters[i].health}");
                     }
                     else
-                        WriteLineColoredConsole($"{i + 1} Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
+                        WriteLineColoredConsole($"{i + 1}  Lv. {monsters[i].level}\t{monsters[i].name}  \tDead", ConsoleColor.DarkGray);
                 }
                 Console.WriteLine();
                 Console.WriteLine();
@@ -62,21 +63,9 @@ namespace TextRPG_project
                 {
                     if (monsters[i].health > 0)
                     {
-                        Console.Clear();
                         int damage = (int)(monsters[i].attack * 10 / (10 + player.defence));
-                        Console.WriteLine("Battle!!\n");
-                        Console.WriteLine($"Lv. {monsters[i].level} {monsters[i].name}의 공격!");
-                        Console.Write($"{player.name} 을(를) 맞췄습니다. [데미지 : ");
-                        WriteColoredConsole($"{damage}", ConsoleColor.Red);
-                        Console.WriteLine("]");
-                        Console.WriteLine();
-                        Console.WriteLine($"Lv. {player.level} {player.name}");
-                        Console.WriteLine($"HP {player.health} -> {MathF.Max(0, player.health - damage)}");
                         player.health -= damage;
-
-                        Console.WriteLine();
-                        WriteColoredConsole("0", ConsoleColor.Red);
-                        Console.WriteLine(". 다음");
+                        ConsoleUI.ShowEnemyPhase(player, monsters, damage, i);  // 몬스터가 공격하는 콘솔 출력
                         input = CheckInput(0, 0);
                     }
 
@@ -92,20 +81,8 @@ namespace TextRPG_project
 
             public void EnterDungeon(Character player)
             {
+                ConsoleUI.ShowEnterDungeon(player, this);   // 던전 메뉴 콘솔에 출력
 
-                Console.Clear();
-                Console.WriteLine("Battle!");
-                Console.WriteLine();
-                PrintMonsters();
-                player.PrintSimpleStats();
-                Console.WriteLine();
-                WriteColoredConsole("1", ConsoleColor.Red);
-                Console.WriteLine(". 공격");
-                WriteColoredConsole("2", ConsoleColor.Red);
-                Console.WriteLine(". 스킬");
-                WriteColoredConsole("3", ConsoleColor.Red);
-                Console.WriteLine(". 포션 사용");
-                Console.WriteLine();
                 int input = CheckInput(1, 3);
 
                 switch (input)
@@ -131,12 +108,7 @@ namespace TextRPG_project
 
             void AttackPhase(Character player)
             {
-                Console.Clear();
-                Console.WriteLine("Battle!");
-                Console.WriteLine();
-                PrintMonstersWithNumber();
-                player.PrintSimpleStats();
-                Console.WriteLine();
+                ConsoleUI.ShowBattleInfo(player, this);
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 취소");
                 
@@ -145,35 +117,10 @@ namespace TextRPG_project
 
             void Skill(Character player)
             {
-                Console.Clear();
-                Console.WriteLine("Battle!");
-                Console.WriteLine();
-                PrintMonsters();
-                player.PrintSimpleStats();
-                Console.WriteLine();
-                
+
                 Random rand = new Random();
 
-                //if (player.class_type == 1)                     // 전사일 경우
-                //{
-                WriteColoredConsole("1", ConsoleColor.Red);
-                Console.WriteLine(". 알파 스트라이크 - MP 10");
-                Console.WriteLine("   공격력 * 2 로 하나의 적을 공격합니다.");
-                WriteColoredConsole("2", ConsoleColor.Red);
-                Console.WriteLine(". 더블 스트라이크 - MP 15");
-                Console.WriteLine("   공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
-                WriteColoredConsole("0", ConsoleColor.Red);
-                Console.WriteLine(". 취소");
-                //}
-
-                //else if (player.class_type == 2)                // 도적일 경우
-                //{
-                //    Console.WriteLine("1.\t알파 스트라이크 - MP 10");
-                //    Console.WriteLine("\t공격력 * 2 로 하나의 적을 공격합니다.");
-                //    Console.WriteLine("2.\t더블 스트라이크 - MP 15");
-                //    Console.WriteLine("\t공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
-                //    Console.WriteLine("0.\t취소");
-                //}
+                ConsoleUI.ShowSelectSkill(player, this);   // 스킬 선택하는 콘솔 출력
 
                 int input = CheckInput(0, 2);
                 if (input == 0)
@@ -191,12 +138,7 @@ namespace TextRPG_project
 
                     else
                     {
-                        Console.Clear();
-                        Console.WriteLine("Battle!");
-                        Console.WriteLine();
-                        PrintMonstersWithNumber();
-                        player.PrintSimpleStats();
-                        Console.WriteLine();
+                        ConsoleUI.ShowBattleInfo(player, this);
                         WriteColoredConsole("0", ConsoleColor.Red);
                         Console.WriteLine(". 취소");
                         AttackInput(player, 2);
@@ -244,13 +186,13 @@ namespace TextRPG_project
 
             void AttackResult(Character player, int damage, List<Monster> attackedmonsters, int attackOrSkill)
             {
-                Console.Clear();
                 Random rand = new Random();
 
-
+                Console.Clear();
                 Console.WriteLine("Battle!");
                 Console.WriteLine();
                 Console.WriteLine($"{player.name}의 공격!");
+
                 for (int i = 0; i < attackedmonsters.Count; i++)
                 {
                     Monster monster = attackedmonsters[i];
@@ -259,39 +201,27 @@ namespace TextRPG_project
                     if (critical < 4) isCrit = true;             // 치명타 확률계산
                     bool isEvade = false;
                     int evasion = rand.Next(1, 11);
-                    if (evasion == 1 && attackOrSkill == 1) isEvade = true;
                     int attackDamage;
-                    if (isEvade)
+                    if (evasion == 1 && attackOrSkill == 1)
                     {
-                        Console.WriteLine($"Lv.{monster.level} {monster.name}을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                        isEvade = true;
                         attackDamage = 0;
                     }
                     else
                     {
-
                         int errorRange = (damage + 9) / 10;   // 공격의 오차 범위, 올림처리 위해 (공격력+9) / 10을 함
                         attackDamage = rand.Next(damage - errorRange, damage + errorRange + 1);
                         if (isCrit) attackDamage = (int)(attackDamage * 1.6f);
-                        Console.Write($"Lv.{monster.level} {monster.name}을(를) 맞췄습니다. [데미지 : ");
-                        WriteColoredConsole($"{attackDamage}", ConsoleColor.Red);
-                        Console.Write("]");
+                        monster.health -= attackDamage;          // 공격 데미지 처리
 
-                        if (isCrit) Console.Write(" - 치명타 공격!!");
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.WriteLine($"Lv.{monster.level} {monster.name}");
-                        Console.Write($"HP {monster.health} -> ");
-                        if (monster.health - attackDamage <= 0)
+                        if (monster.health <= 0)
                         {
-                            WriteLineColoredConsole("Dead", ConsoleColor.DarkGray);
                             DeadCount++;
                             player.experience += monster.level;
                             player.gold += monster.level * 100;
                         }
-                        else Console.WriteLine($"{monster.health - attackDamage}");
                     }
-                    monster.health -= attackDamage;          // 공격 데미지 처리
-                    Console.WriteLine();
+                    ConsoleUI.ShowAttackResult(player, monster, i, isEvade, isCrit, attackDamage);
                 }
 
                 Console.WriteLine();

@@ -57,7 +57,6 @@ namespace TextRPG_project
             Console.WriteLine($"- 미니언 5마리 처치 ({player.questNumber[0]} / 5)\n");
 
             Console.WriteLine("- 보상 -");
-            //Console.WriteLine("대충 아이템 이름");
             Console.WriteLine("500G\n");
             CheckQuest(player, 0);
         }
@@ -68,10 +67,6 @@ namespace TextRPG_project
             Console.WriteLine("퀘스트\n");
 
             Console.WriteLine("장비 착용하기\n");
-
-            //Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
-            //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
-            //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
 
             Console.WriteLine($"- 아무 장비나 착용하기 ({player.questNumber[1]} / 1)\n");
 
@@ -86,10 +81,6 @@ namespace TextRPG_project
             Console.WriteLine("퀘스트\n");
 
             Console.WriteLine("더욱 더 강해지기\n");
-
-            //Console.WriteLine("이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?");
-            //Console.WriteLine("마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!");
-            //Console.WriteLine("모험가인 자네가 좀 처치해주게!\n");
 
             Console.WriteLine($"- 레벨 3 달성하기 ({player.level} / 3)\n");
 
@@ -182,10 +173,6 @@ namespace TextRPG_project
                                         player.gold += 1000;
                                         break;
                                 }
-                                    
-                        
-                                //Item item = new Item(이름, 타입, 수치, 가격);
-                                //player.items.Add(item);
                                 player.questCleared[questNum] = true;
                                 break;
                             case 2:         //  넘어감

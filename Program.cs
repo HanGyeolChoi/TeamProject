@@ -18,6 +18,8 @@ namespace TextRPG_project
         static int potionHp = 30;
         static List<int> potionList = new List<int>(3); // 포션 리스트 초기화;
         static bool isDataLoaded = false;
+
+        static UI ConsoleUI = UI.UIInstance;
         static string Start()
         {
             Console.Clear();
@@ -26,14 +28,8 @@ namespace TextRPG_project
             string fileName = "..\\..\\..\\PlayData\\PlayerData.json"; // 플레이어 데이터 경로명
             if (File.Exists(fileName))  // 저장된 데이터 있으면
             {
-                Console.WriteLine("저장된 데이터를 불러오시겠습니까?");
-                WriteColoredConsole("1", ConsoleColor.Red);
-                Console.WriteLine(". 데이터 불러오기");
-                WriteColoredConsole("2", ConsoleColor.Red);
-                Console.WriteLine(". 새로 시작하기");
-
+                ConsoleUI.ShowSelectLoadData();   // 저장된 데이터 불러올지 선택하는 콘솔 출력
                 int choice = CheckInput(1, 2);
-
                 if (choice == 1)    // 저장된 데이터 불러오기
                 {
                     if (LoadData(ref player, itemList, potionList))
@@ -52,17 +48,10 @@ namespace TextRPG_project
             }
 
             Console.WriteLine("원하시는 이름을 선택해주세요.\n");
-            
             string name = Console.ReadLine();
-
             Console.WriteLine($"\n설정하신 이름은 \"{name}\" 입니다.\n");
-            WriteColoredConsole("1", ConsoleColor.Red);
-            Console.WriteLine(". 저장");
-            WriteColoredConsole("2",ConsoleColor.Red);
-            Console.WriteLine(". 취소");
-
+            ConsoleUI.ShowSelectSaveData();   // 설정한 이름을 저장할지 선택하는 콘솔 출력
             int input = CheckInput(1, 2);
-
             if (input == 1)
             {
                 return name;
@@ -81,26 +70,14 @@ namespace TextRPG_project
 
         static int SelectClass()
         {
-
-            Console.Clear();
-            Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
-            Console.WriteLine("원하시는 직업을 선택해주세요.\n");
-            WriteColoredConsole("1", ConsoleColor.Red);
-            Console.WriteLine(". 전사");
-            WriteColoredConsole("2", ConsoleColor.Red);
-            Console.WriteLine(". 도적\n");
+            ConsoleUI.ShowSelectClass();  // 직업 선택하는 콘솔 출력
             int class_type = CheckInput(1, 2);
 
             if (class_type == 1) Console.WriteLine("\n고른 직업은 전사입니다.\n");
             else if (class_type == 2) Console.WriteLine("\n고른 직업은 도적 입니다.\n");
 
-            WriteColoredConsole("1", ConsoleColor.Red);
-            Console.WriteLine(". 저장");
-            WriteColoredConsole("2", ConsoleColor.Red);
-            Console.WriteLine(". 취소");
-
+            ConsoleUI.ShowSelectSaveData();   // 설정한 직업을 저장할지 선택하는 콘솔 출력
             int input = CheckInput(1, 2);
-
             if (input == 1)
             {
                 return class_type;
@@ -113,27 +90,7 @@ namespace TextRPG_project
         }
         static void MainMenu(Character player)
         {
-            Console.Clear();
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
-            Console.WriteLine("이곳에서 던전에 들어가기 전 활동을 할 수 있습니다.\n");
-
-            WriteColoredConsole("1. ", ConsoleColor.Red);
-            Console.WriteLine("상태 보기");
-            WriteColoredConsole("2. ", ConsoleColor.Red);
-            Console.WriteLine("인벤토리");
-            WriteColoredConsole("3. ", ConsoleColor.Red);
-            Console.WriteLine("상점");
-            WriteColoredConsole("4. ", ConsoleColor.Red);
-            Console.WriteLine("체력 회복하기");
-            WriteColoredConsole("5. ", ConsoleColor.Red);
-            Console.WriteLine("전투 시작");
-            WriteColoredConsole("6. ", ConsoleColor.Red);
-            Console.WriteLine("퀘스트");
-            WriteColoredConsole("7. ", ConsoleColor.Red);
-            Console.WriteLine("데이터 저장");
-            WriteColoredConsole("0. ", ConsoleColor.Red);
-            Console.WriteLine("종료");
-
+            ConsoleUI.ShowMainMenu(); // 메인 메뉴 콘솔 출력
             int input = CheckInput(0, 7);
 
             switch (input)
@@ -179,20 +136,12 @@ namespace TextRPG_project
         }
         static void GameOver(Character player)
         {
-            Console.Clear();
-            Console.WriteLine("Battle!! - Result");
-            WriteLineColoredConsole("\nYou Lose", ConsoleColor.Red);
-            Console.WriteLine($"\nLV{player.level} {player.name}");
-            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
-            //Console.WriteLine("\n0. 처음부터 다시 시작하기");
-            Console.WriteLine("\n0. 게임 종료하기");
+            ConsoleUI.ShowGameOver(player);   // 게임 오버 정보 콘솔에 출력
+
             int input = CheckInput(0, 0);
 
             switch (input)
             {
-                //case 0:
-                //    Start();
-                //    break;
                 case 0:
                     break;
                 default:
@@ -204,23 +153,15 @@ namespace TextRPG_project
 
         static void GameClear(Character player, Dungeon dungeon)
         {
-            Console.Clear();
-            Console.WriteLine("Battle!! - Result");
-            WriteLineColoredConsole("\nYou Win", ConsoleColor.Green);
-            Console.WriteLine($"던전에서 몬스터를 {dungeon.monsters.Count} 마리 잡았습니다.");
             player.LevelUp();
-            Console.WriteLine($"Hp {player.lasthp} -> {player.health}");
-            Console.Write($"남은 MP {player.mp} -> ");
             player.mp += 10;
-            if(player.mp >= player.maxMP)
+            if (player.mp >= player.maxMP)
             {
                 player.mp = player.maxMP;
             }
-            Console.WriteLine($"{player.mp}");
-            Console.WriteLine("\n획득 아이템");
-            Console.WriteLine($"Gold {player.lastgold} -> {player.gold}");
-            GetPotion();    // 10%의 확률로 포션 획득
-            Console.WriteLine("\n0. 돌아가기");
+            bool potionFlag = GetPotion();    // 10%의 확률로 포션 획득
+            ConsoleUI.ShowGameClear(player, dungeon, potionFlag);   // 게임 클리어 정보 콘솔에 출력
+
             int input = CheckInput(0, 0);
 
             switch (input)
