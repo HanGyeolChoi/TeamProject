@@ -144,6 +144,7 @@ namespace TextRPG_project
                 {
                     Console.Write("- ");
                     if (items[i].equip) Console.Write("[E] ");
+                    else Console.Write("    ");
                     items[i].ShowItem();
                     Console.WriteLine();
                 }
@@ -179,6 +180,7 @@ namespace TextRPG_project
                     WriteColoredConsole($" {i + 1}", ConsoleColor.Red);
                     Console.Write(". ");
                     if (items[i].equip) Console.Write("[E] ");
+                    else Console.Write("    ");
                     items[i].ShowItem();
                     Console.WriteLine();
                 }
@@ -303,6 +305,5 @@ namespace TextRPG_project
                 questNumber[2] = level;
             }
         }
-
     }
 }

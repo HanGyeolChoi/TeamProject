@@ -15,8 +15,9 @@ namespace TextRPG_project
         static Character player = new Character();
         static List<Item> itemList = new List<Item>(); // 아이템 리스트 초기화;
         static List<Monster> monsterList = new List<Monster>(); // 몬스터 리스트 초기화;
-        static int potionHp = 30;
-        static List<int> potionList = new List<int>(3); // 포션 리스트 초기화;
+        static Store store = new Store();
+        static Heal heal = new Heal();
+
         static bool isDataLoaded = false;
 
         static UI ConsoleUI = UI.UIInstance;
@@ -110,10 +111,10 @@ namespace TextRPG_project
                     player.ShowInventory();//인벤토리 보기
                     break;
                 case 3:
-                    Store(itemList, player);//상점 보기
+                    store.StoreMenu(itemList, player);//상점 보기
                     break;
                 case 4:
-                    Rest(player);   // 휴식하기
+                    heal.Rest(player);   // 휴식하기
                     break;
                 case 5:
                     Dungeon dungeon = new Dungeon();    // 전투 시작
@@ -167,7 +168,7 @@ namespace TextRPG_project
             {
                 player.mp = player.maxMP;
             }
-            bool potionFlag = GetPotion();    // 10%의 확률로 포션 획득
+            bool potionFlag = heal.GetPotion();    // 10%의 확률로 포션 획득
             ConsoleUI.ShowGameClear(player, dungeon, potionFlag);   // 게임 클리어 정보 콘솔에 출력
 
             int input = CheckInput(0, 0);

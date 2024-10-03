@@ -17,13 +17,13 @@ namespace TextRPG_project
             public int price;
             public bool sold;
             public bool equip;
-            public Item(string _name, int _type, int _stat, string _description,int _price)
+            public Item(string name, int type, int stat, string description,int price)
             {
-                name = _name;
-                itemType = _type;
-                stat = _stat;
-                price = _price;
-                description = _description;
+                this.name = name;
+                itemType = type;
+                this.stat = stat;
+                this.price = price;
+                this.description = description;
                 sold = false;
                 equip = false;
             }

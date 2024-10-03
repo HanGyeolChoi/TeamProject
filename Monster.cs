@@ -14,12 +14,12 @@ namespace TextRPG_project
             public int attack;
             public bool dead;
 
-            public Monster(string _name, int _level, int _health, int _attack, bool _dead = false)
+            public Monster(string name, int level, int health, int attack, bool dead = false)
             {
-                name = _name;
-                level = _level;
-                health = _health;
-                attack = _attack;
+                this.name = name;
+                this.level = level;
+                this.health = health;
+                this.attack = attack;
             }
             public Monster(Monster monster)
             {
