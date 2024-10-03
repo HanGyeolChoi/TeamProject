@@ -141,12 +141,12 @@ namespace TextRPG_project
             public void ShowSelectSkill(Character player, Dungeon dungeon)
             {
                 ConsoleUI.ShowBattleInfo(player, dungeon);
-                WriteColoredConsole("1", ConsoleColor.Red);
-                Console.WriteLine(". 알파 스트라이크 - MP 10");
-                Console.WriteLine("   공격력 * 2 로 하나의 적을 공격합니다.");
-                WriteColoredConsole("2", ConsoleColor.Red);
-                Console.WriteLine(". 더블 스트라이크 - MP 15");
-                Console.WriteLine("   공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+                for (int i = 1; i < skillList.Count; i++)
+                {
+                    WriteColoredConsole($"{i}", ConsoleColor.Red);
+                    Console.Write(". ");
+                    skillList[i].ShowSkill();
+                }
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 취소");
             }
@@ -202,6 +202,7 @@ namespace TextRPG_project
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 나가기");
             }
+
         }
     }
 

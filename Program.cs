@@ -15,6 +15,7 @@ namespace TextRPG_project
         static Character player = new Character();
         static List<Item> itemList = new List<Item>(); // 아이템 리스트 초기화;
         static List<Monster> monsterList = new List<Monster>(); // 몬스터 리스트 초기화;
+        static List<Skill> skillList = new List<Skill>();
         static Store store = new Store();
         static Heal heal = new Heal();
 
@@ -210,7 +211,11 @@ namespace TextRPG_project
                 for (int i = 0; i < 3; i++)
                     potionList.Add(potionHp);
             }
-            // 몬스터 데이터 추가
+            // 스킬 데이터 추가, 0번은 기본 공격. 이름, 데미지 배수, 필요한 마나, 스킬 설명, 랜덤타겟 true or false, 타겟 수 순서.
+            skillList.Add(new Skill("기본 공격", 1, 0, "기본 공격 입니다.", false, 1));
+            skillList.Add(new Skill("알파 스트라이크", 2, 10, "공격력 * 2 로 하나의 적을 공격합니다.", false, 1));
+            skillList.Add(new Skill("더블 스트라이크", 1.5f, 15, "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다..", true, 2));
+            // 몬스터 데이터 추가. 이름, 몬스터 레벨, 몬스터 체력, 몬스터 공격력 순서 
             monsterList.Add(new Monster("미니언", 2, 15, 5));
             monsterList.Add(new Monster("공허충", 3, 10, 9));
             monsterList.Add(new Monster("대포미니언", 5, 25, 8));

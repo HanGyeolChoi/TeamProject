@@ -91,7 +91,7 @@ namespace TextRPG_project
                         AttackPhase(player);
                         break;
                     case 2:
-                        Skill(player);
+                        SkillMenu(player);
                         break;
                     case 3:
                         heal.UsePotion(player);
@@ -112,14 +112,11 @@ namespace TextRPG_project
                 WriteColoredConsole("0", ConsoleColor.Red);
                 Console.WriteLine(". 취소");
                 
-                AttackInput(player, 1);
+                AttackInput(player, true, skillList[0]);
             }
 
-            void Skill(Character player)
+            public void SkillMenu(Character player)
             {
-
-                Random rand = new Random();
-
                 ConsoleUI.ShowSelectSkill(player, this);   // 스킬 선택하는 콘솔 출력
 
                 int input = CheckInput(0, 2);
@@ -127,64 +124,15 @@ namespace TextRPG_project
                 {
                     EnterDungeon(player);
                 }
-                else if (input == 1)
+                else
                 {
-                    if (player.mp < 10)
-                    {
-                        Console.WriteLine("MP가 부족합니다.");
-                        Thread.Sleep(1000);
-                        Skill(player);
-                    }
-
-                    else
-                    {
-                        ConsoleUI.ShowBattleInfo(player, this);
-                        WriteColoredConsole("0", ConsoleColor.Red);
-                        Console.WriteLine(". 취소");
-                        AttackInput(player, 2);
-                    }
-
+                    skillList[input].UseSkill(player, this);
                 }
-                else if (input == 2)
-                {
-                    if (player.mp < 15)
-                    {
-                        Console.WriteLine("MP가 부족합니다.");
-                        Thread.Sleep(1000);
-                        Skill(player);
-                    }
 
-                    else
-                    {
-
-                        if (monsters.Count - DeadCount > 1)
-                        {
-                            List<Monster> liveMonsters = new List<Monster>();       // 살아있는 monster의 List
-                            liveMonsters = monsters.ToList();
-                            for (int i = liveMonsters.Count - 1; i >= 0; i--)
-                            {
-                                if (liveMonsters[i].IsDead()) liveMonsters.Remove(liveMonsters[i]);     // 죽은 monster를 List에서 제외시킴
-                            }
-                            while (liveMonsters.Count > 2)
-                            {
-                                liveMonsters.Remove(liveMonsters[rand.Next(0, liveMonsters.Count)]);    // 2마리가 남을때까지 제외시킴
-                            }
-                            player.mp -= 15;
-                            AttackResult(player, (int)(player.attack * 1.5f), liveMonsters, 2);
-                        }
-
-                        else
-                        {
-                            Console.WriteLine("남은 몬스터가 부족합니다.");
-                            Thread.Sleep(1000);
-                            Skill(player);
-                        }
-                    }
-                }
             }
 
 
-            void AttackResult(Character player, int damage, List<Monster> attackedmonsters, int attackOrSkill)
+            public void AttackResult(Character player, int damage, List<Monster> attackedmonsters, bool isAttack)
             {
                 Random rand = new Random();
 
@@ -202,7 +150,7 @@ namespace TextRPG_project
                     bool isEvade = false;
                     int evasion = rand.Next(1, 11);
                     int attackDamage;
-                    if (evasion == 1 && attackOrSkill == 1)
+                    if (evasion == 1 && isAttack)
                     {
                         isEvade = true;
                         attackDamage = 0;
@@ -247,13 +195,13 @@ namespace TextRPG_project
                 else EnemyPhase(player);
             }
 
-            void AttackInput(Character player, int attackOrSkill) // attack일 시 1, skill-1일시 2
+            public void AttackInput(Character player, bool isAttack, Skill skill) // attack일 시 1, skill-1일시 2
             {
                 int input = CheckInput(0, monsters.Count);
                 if (input == 0)
                 {
-                    if (attackOrSkill == 1) EnterDungeon(player);
-                    else Skill(player);
+                    if (isAttack) EnterDungeon(player);
+                    else SkillMenu(player);
                 }
                 else if (input >= 1 && input <= monsters.Count)
                 {
@@ -262,18 +210,18 @@ namespace TextRPG_project
                         Console.WriteLine("잘못된 입력입니다.");
                         Thread.Sleep(1000);
                         ClearPreviousLines(4);
-                        AttackInput(player, attackOrSkill);
+                        AttackInput(player, isAttack, skill);
                     }
                     else
                     {
                         Monster monster = monsters[input - 1];
-                        int attackDamage = player.attack * attackOrSkill;
-                        if (attackOrSkill == 2) player.mp -= 10;
+                        int attackDamage = (int)(player.attack * skill.damageMultiplier);
+                        if (!isAttack) player.mp -= skill.needMP;
                         List<Monster> attackedmonsters = new List<Monster>
                         {
                             monster
                         };
-                        AttackResult(player, attackDamage, attackedmonsters, attackOrSkill);
+                        AttackResult(player, attackDamage, attackedmonsters, isAttack);
                     }
                 }
             }
