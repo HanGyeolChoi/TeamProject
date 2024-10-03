@@ -4,6 +4,12 @@
 
 namespace TextRPG_project
 {
+    enum ClassType
+    {
+        None,   // 초기화용
+        Warrior,    // 전사
+        Rogue,      // 도적
+    }
     internal partial class Program
     {
         public class Character
@@ -11,7 +17,7 @@ namespace TextRPG_project
             public int level;
             public int lastlevel;
             public string name;
-            public int class_type;     //전사일 경우 1, 도적일 경우 2
+            public ClassType class_type;
             public int attack;
             public int defence;
             public int maxHP;
@@ -38,24 +44,19 @@ namespace TextRPG_project
             {
 
             }
-            public Character(string _name, int class_num)
+            public Character(string name, ClassType job, Dictionary<string, Dictionary<string, int>> classData)
             {
                 level = 1;
                 lastlevel = 1;
-                name = _name;
-                class_type = class_num;
-                if (class_num == 1)
-                {
-                    attack = 10;
-                    defence = 5;
-                    maxHP = 100;
-                }
-                else
-                {
-                    attack = 13;
-                    defence = 2;
-                    maxHP = 85;
-                }
+                this.name = name;
+
+                // json 파일 내용 받아와 타입에 따라 설정
+                class_type = job;
+                string classType = class_type == ClassType.Warrior ? "warrior" : "rogue";
+                attack = classData[classType]["attack"];
+                defence = classData[classType]["defense"];
+                maxHP = classData[classType]["maxHP"];
+
                 health = maxHP;
                 lasthp = maxHP;
                 maxMP = 50;
@@ -103,7 +104,7 @@ namespace TextRPG_project
                 WriteLineColoredConsole($"{level}", ConsoleColor.Red);
                 Console.WriteLine($"이  름\t: {name}");
                 Console.Write($"직  업\t: ");
-                if (class_type == 1) Console.WriteLine("전사");
+                if (class_type == ClassType.Warrior) Console.WriteLine("전사");
                 else Console.WriteLine("도적");
                 Console.Write($"공격력\t: ");
                 WriteColoredConsole($"{attack}", ConsoleColor.Red);
@@ -246,10 +247,10 @@ namespace TextRPG_project
                 string? job = null;
                 switch (class_type)
                 {
-                    case 1:
+                    case ClassType.Warrior:
                         job = "전사";
                         break;
-                    case 2:
+                    case ClassType.Rogue:
                         job = "도적";
                         break;
                 }
