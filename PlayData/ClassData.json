@@ -1,0 +1,12 @@
+{
+	"warrior": {
+		"attack": 10,
+		"defense": 5,
+		"maxHP": 100
+	},
+	"rogue": {
+		"attack": 13,
+		"defense": 2,
+		"maxHP": 85
+	}
+}

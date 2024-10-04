@@ -1,0 +1,26 @@
+[
+	{
+		"name": "기본 공격",
+		"damageMultiplier": 1,
+		"needMP": 0,
+		"explaination": "기본 공격 입니다.",
+		"randomTarget": false,
+		"targetNumber": 1
+	},
+	{
+		"name": "알파 스트라이크",
+		"damageMultiplier": 2,
+		"needMP": 10,
+		"explaination": "공격력 * 2 로 하나의 적을 공격합니다.",
+		"randomTarget": false,
+		"targetNumber": 1
+	},
+	{
+		"name": "더블 스트라이크",
+		"damageMultiplier": 1.5,
+		"needMP": 15,
+		"explaination": "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.",
+		"randomTarget": true,
+		"targetNumber": 2
+	}
+]
